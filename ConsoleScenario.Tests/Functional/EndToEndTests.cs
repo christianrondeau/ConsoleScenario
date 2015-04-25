@@ -1,10 +1,11 @@
 ﻿using System;
 using System.IO;
+using ConsoleScenario.Tests.Utils;
 using NUnit.Framework;
 
-namespace ConsoleScenario.Tests
+namespace ConsoleScenario.Tests.Functional
 {
-	public class ScenarioTests
+	public class EndToEndTests
 	{
 		public class OneLineTests
 		{
@@ -31,13 +32,12 @@ namespace ConsoleScenario.Tests
 			}
 		}
 
-		private static Scenario GivenATestConsoleScenario()
+		private static IScenario GivenATestConsoleScenario()
 		{
-			var appPath = Path.Combine(Path.GetDirectoryName(new Uri(typeof(ScenarioTests).Assembly.CodeBase).LocalPath),
+			var appPath = Path.Combine(Path.GetDirectoryName(new Uri(typeof(EndToEndTests).Assembly.CodeBase).LocalPath),
 				@"ConsoleScenario.TestApp.exe");
 
-			var scenario = new Scenario(appPath, "one-line");
-			return scenario;
+			return Scenarios.Create(appPath, "one-line");
 		}
 	}
 }

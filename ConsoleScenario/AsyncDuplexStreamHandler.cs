@@ -7,34 +7,34 @@ using System.Threading.Tasks;
 
 namespace ConsoleScenario
 {
-	public interface IAsyncDuplexStreamsHandlerFactory
+	public interface IAsyncDuplexStreamHandlerFactory
 	{
-		IAsyncTwoWayStreamsHandler Create(TextReader output, TextWriter input);
+		IAsyncDuplexStreamHandler Create(TextReader output, TextWriter input);
 	}
 
-	public class AsyncDuplexStreamsHandlerFactory : IAsyncDuplexStreamsHandlerFactory
+	public class AsyncDuplexStreamHandlerFactory : IAsyncDuplexStreamHandlerFactory
 	{
-		public IAsyncTwoWayStreamsHandler Create(TextReader output, TextWriter input)
+		public IAsyncDuplexStreamHandler Create(TextReader output, TextWriter input)
 		{
-			return new AsyncTwoWayStreamsHandler(output, input);
+			return new AsyncDuplexStreamHandler(output, input);
 		}
 	}
 
-	public interface IAsyncTwoWayStreamsHandler : IDisposable
+	public interface IAsyncDuplexStreamHandler : IDisposable
 	{
 		string ReadUntil(double timeoutInSeconds, params string[] expectedStrings);
 		void WriteLine(string command);
 		void WaitForExit();
 	}
 
-	public class AsyncTwoWayStreamsHandler : IAsyncTwoWayStreamsHandler
+	public class AsyncDuplexStreamHandler : IAsyncDuplexStreamHandler
 	{
 		private readonly TextWriter _input;
 		private readonly TextReader _output;
 		private readonly Task _task;
 		private readonly BlockingCollection<string> _pendingOutputLines = new BlockingCollection<string>();
 
-		public AsyncTwoWayStreamsHandler(TextReader output, TextWriter input)
+		public AsyncDuplexStreamHandler(TextReader output, TextWriter input)
 		{
 			_input = input;
 			_output = output;

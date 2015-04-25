@@ -1,7 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 
-namespace ConsoleScenario.Tests
+namespace ConsoleScenario.Tests.Utils
 {
 	public static class ScenarioHelper
 	{

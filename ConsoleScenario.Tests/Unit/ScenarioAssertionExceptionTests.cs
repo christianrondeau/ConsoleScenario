@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using ConsoleScenario.Tests.Utils;
+using NUnit.Framework;
 
 namespace ConsoleScenario.Tests
 {

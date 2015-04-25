@@ -3,21 +3,28 @@ using System.Diagnostics;
 
 namespace ConsoleScenario
 {
-	public class Scenario
+	public interface IScenario
 	{
-		private readonly string _appPath;
-		private readonly string _args;
+		IScenario Expect(string output);
+		void Run();
+	}
+
+	public class Scenario : IScenario
+	{
+		private readonly Process _process;
 		private string _expectedOutput;
+		private readonly IAsyncDuplexStreamHandlerFactory _asyncDuplexStreamHandlerFactory;
 
-		public Scenario(string appPath, string args = null)
+		public Scenario(Process process, IAsyncDuplexStreamHandlerFactory asyncDuplexStreamHandlerFactory)
 		{
-			if (appPath == null) throw new ArgumentNullException("appPath");
+			if (process == null) throw new ArgumentNullException("process");
+			if (asyncDuplexStreamHandlerFactory == null) throw new ArgumentNullException("asyncDuplexStreamHandlerFactory");
 
-			_appPath = appPath;
-			_args = args;
+			_process = process;
+			_asyncDuplexStreamHandlerFactory = asyncDuplexStreamHandlerFactory;
 		}
 
-		public Scenario Expect(string output)
+		public IScenario Expect(string output)
 		{
 			_expectedOutput = output;
 			return this;
@@ -25,25 +32,14 @@ namespace ConsoleScenario
 
 		public void Run()
 		{
-			using (var process = Process.Start(new ProcessStartInfo
-				{
-					FileName = _appPath,
-					Arguments = _args,
-					CreateNoWindow = true,
-					WindowStyle = ProcessWindowStyle.Hidden,
-					UseShellExecute = false,
-					RedirectStandardInput = true,
-					RedirectStandardError = true,
-					RedirectStandardOutput = true
-				}))
-			{
-				var asyncTwoWayStreamsHandler = new AsyncDuplexStreamsHandlerFactory().Create(process.StandardOutput, process.StandardInput);
+			_process.Start();
 
-				var output = asyncTwoWayStreamsHandler.ReadUntil(10, "");
+			var asyncTwoWayStreamsHandler = _asyncDuplexStreamHandlerFactory.Create(_process.StandardOutput, _process.StandardInput);
 
-				if (output != _expectedOutput)
-					throw new ScenarioAssertionException("Invalid console output", output, _expectedOutput);
-			}
+			var output = asyncTwoWayStreamsHandler.ReadUntil(10, "");
+
+			if (output != _expectedOutput)
+				throw new ScenarioAssertionException("Invalid console output", output, _expectedOutput);
 		}
 	}
 }

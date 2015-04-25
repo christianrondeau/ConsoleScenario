@@ -43,9 +43,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ScenarioHelper.cs" />
-    <Compile Include="ScenarioAssertionExceptionTests.cs" />
-    <Compile Include="ScenarioTests.cs" />
+    <Compile Include="Unit\AsyncDuplexStreamHandlerFactoryTests.cs" />
+    <Compile Include="Unit\AsyncDuplexStreamHandlerTests.cs" />
+    <Compile Include="Utils\BlockingStream.cs" />
+    <Compile Include="Utils\ScenarioHelper.cs" />
+    <Compile Include="Unit\ScenarioAssertionExceptionTests.cs" />
+    <Compile Include="Functional\EndToEndTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -61,6 +64,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
