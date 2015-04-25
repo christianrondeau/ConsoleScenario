@@ -33,8 +33,6 @@ namespace ConsoleScenario
 			: base(BuildMessage(description, lineIndex, actual, expected))
 		{
 			if (description == null) throw new ArgumentNullException("description");
-			if (actual == null) throw new ArgumentNullException("actual");
-			if (expected == null) throw new ArgumentNullException("expected");
 			if (lineIndex < 0) throw new ArgumentException("Line index must be at least 0", "lineIndex");
 
 			_description = description;
@@ -45,12 +43,29 @@ namespace ConsoleScenario
 
 		private static string BuildMessage(string description, int lineIndex, string actual, string expected)
 		{
-			return String.Format("Assert failed at line {1}: {2}{0}--- Received:{0}{3}{0}--- Expected:{0}{4}",
-				Environment.NewLine,
-				lineIndex + 1,
-				description,
-				actual,
-				expected);
+			var basicMessage = String.Format("Assert failed at line {0}: {1}", lineIndex + 1, description);
+
+			if (actual != null && expected != null)
+				return String.Format("{1}{0}--- Received:{0}{2}{0}--- Expected:{0}{3}",
+					Environment.NewLine,
+					basicMessage,
+					actual,
+					expected);
+
+			if (expected != null)
+				return String.Format("{1}{0}--- Expected:{0}{2}",
+					Environment.NewLine,
+					basicMessage,
+					expected);
+
+			if (actual != null)
+				return String.Format("{1}{0}--- Received:{0}{2}",
+					Environment.NewLine,
+					basicMessage,
+					actual);
+
+			return basicMessage;
+
 		}
 	}
 }

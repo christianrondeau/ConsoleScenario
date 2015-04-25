@@ -44,24 +44,8 @@ namespace ConsoleScenario.Tests.Unit
 		}
 
 		[Test]
-		public void CanReadUntilStringIsFound()
-		{
-			var sr = new StringReader(String.Join(
-				Environment.NewLine,
-				"This line should be ignored because it comes before",
-				"This line should be taken because it includes MARKER in it",
-				"This line should be ignored because it comes after"
-				));
-			var sw = new StringWriter();
-
-			var handler = new AsyncDuplexStreamHandler(sr, sw);
-
-			Assert.That(handler.ReadUntil(0, "MARKER"), Is.EqualTo("This line should be taken because it includes MARKER in it"));
-		}
-
-		[Test]
 		[ExpectedException(typeof(TimeoutException), ExpectedMessage = "No result in alloted time: 00.1000s")]
-		public void ReadUntilTimeoutThrows()
+		public void CanReadUntilTimeout()
 		{
 			var stream = new BlockingStream();
 			var sr = new StreamReader(stream);
@@ -69,7 +53,7 @@ namespace ConsoleScenario.Tests.Unit
 
 			var handler = new AsyncDuplexStreamHandler(sr, sw);
 
-			Assert.That(handler.ReadUntil(0.1, "MARKER"), Is.EqualTo("This line should be taken because it includes MARKER in it"));
+			handler.ReadLine(0.1);
 		}
 
 		[Test]

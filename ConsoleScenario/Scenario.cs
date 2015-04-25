@@ -13,7 +13,7 @@ namespace ConsoleScenario
 
 	public class Scenario : IScenario
 	{
-		private const int ReadLineTimeoutInSeconds = 10;
+		private const double ReadLineTimeoutInSeconds = 0.5d;
 
 		private readonly Process _process;
 		private readonly List<IAssertion> _lineAssertions;
@@ -49,12 +49,21 @@ namespace ConsoleScenario
 				var asyncTwoWayStreamsHandler = _asyncDuplexStreamHandlerFactory.Create(_process.StandardOutput,
 					_process.StandardInput);
 
-				for (var lineIndex = 0; lineIndex < _lineAssertions.Count; lineIndex++)
+				var lineIndex = 0;
+				for (; lineIndex < _lineAssertions.Count; lineIndex++)
 				{
 					var actualLine = asyncTwoWayStreamsHandler.ReadLine(ReadLineTimeoutInSeconds);
 					var assertion = _lineAssertions[lineIndex];
 
 					assertion.Assert(lineIndex, actualLine);
+				}
+
+				if (!_process.HasExited)
+				{
+					var extraneousLine = asyncTwoWayStreamsHandler.ReadLine(ReadLineTimeoutInSeconds);
+
+					if (extraneousLine != null)
+						throw new ScenarioAssertionException("Extraneous line", lineIndex, extraneousLine, null);
 				}
 
 				asyncTwoWayStreamsHandler.WaitForExit();

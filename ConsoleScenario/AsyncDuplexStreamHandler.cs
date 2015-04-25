@@ -2,7 +2,6 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConsoleScenario
@@ -23,7 +22,6 @@ namespace ConsoleScenario
 	public interface IAsyncDuplexStreamHandler : IDisposable
 	{
 		string ReadLine(double timeoutInSeconds);
-		string ReadUntil(double timeoutInSeconds, params string[] expectedStrings);
 		void WriteLine(string command);
 		void WaitForExit();
 	}
@@ -59,17 +57,6 @@ namespace ConsoleScenario
 			}
 
 			return line;
-		}
-
-		public string ReadUntil(double timeoutInSeconds, params string[] expectedStrings)
-		{
-			while (true)
-			{
-				var line = ReadLine(timeoutInSeconds);
-
-				if (expectedStrings.Any(s => line.IndexOf(s, StringComparison.Ordinal) > -1))
-					return line;
-			}
 		}
 
 		public void WriteLine(string command)

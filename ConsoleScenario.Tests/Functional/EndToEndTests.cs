@@ -67,6 +67,42 @@ namespace ConsoleScenario.Tests.Functional
 						"This one is wrong"
 						));
 			}
+
+			[Test]
+			public void FailureBecauseOfAnExtraneousLine()
+			{
+				ScenarioHelper.Do(() =>
+					GivenATestConsoleScenario(TestName)
+						.Expect(
+							"Line 1"
+						)
+						.Run(),
+					ScenarioHelper.Expect(
+						"Extraneous line",
+						2,
+						"Line 1",
+						null
+						));
+			}
+
+			[Test]
+			public void FailureBecauseLineIsMissing()
+			{
+				ScenarioHelper.Do(() =>
+					GivenATestConsoleScenario(TestName)
+						.Expect(
+							"Line 1",
+							"Line 2",
+							"Line 3"
+						)
+						.Run(),
+					ScenarioHelper.Expect(
+						"Missing line",
+						2,
+						null,
+						"Line 3"
+						));
+			}
 		}
 
 		private static IScenario GivenATestConsoleScenario(string testName)
