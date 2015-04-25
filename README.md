@@ -1,5 +1,7 @@
 # ConsoleScenario
 
+[![Join the chat at https://gitter.im/christianrondeau/ConsoleScenario](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/christianrondeau/ConsoleScenario?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 An automated test fixture for .NET console applications
 
 [![Join the chat at https://gitter.im/christianrondeau/ConsoleScenario](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/christianrondeau/ConsoleScenario?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
