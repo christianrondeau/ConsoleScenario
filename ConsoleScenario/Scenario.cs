@@ -6,8 +6,9 @@ namespace ConsoleScenario
 {
 	public interface IScenario
 	{
-		IScenario Expect(params string[] lines);
 		void Run();
+		void AddAssertion(IAssertion assertion);
+		void AddAssertions(IEnumerable<IAssertion> assertions);
 	}
 
 	public class Scenario : IScenario
@@ -15,7 +16,7 @@ namespace ConsoleScenario
 		private const int ReadLineTimeoutInSeconds = 10;
 
 		private readonly Process _process;
-		private readonly List<string> _expectedLines;
+		private readonly List<IAssertion> _lineAssertions;
 		private readonly IAsyncDuplexStreamHandlerFactory _asyncDuplexStreamHandlerFactory;
 
 		public Scenario(Process process, IAsyncDuplexStreamHandlerFactory asyncDuplexStreamHandlerFactory)
@@ -26,29 +27,37 @@ namespace ConsoleScenario
 			_process = process;
 			_asyncDuplexStreamHandlerFactory = asyncDuplexStreamHandlerFactory;
 
-			_expectedLines = new List<string>();
+			_lineAssertions = new List<IAssertion>();
 		}
 
-		public IScenario Expect(params string[] lines)
+		public void AddAssertion(IAssertion assertion)
 		{
-			_expectedLines.AddRange(lines);
-			return this;
+			_lineAssertions.Add(assertion);
+		}
+
+		public void AddAssertions(IEnumerable<IAssertion> assertions)
+		{
+			_lineAssertions.AddRange(assertions);
 		}
 
 		public void Run()
 		{
-			_process.Start();
-
-			var asyncTwoWayStreamsHandler = _asyncDuplexStreamHandlerFactory.Create(_process.StandardOutput, _process.StandardInput);
-
-			for (var lineIndex = 0; lineIndex < _expectedLines.Count; lineIndex++)
+			using (_process)
 			{
-				var actualLine = asyncTwoWayStreamsHandler.ReadLine(ReadLineTimeoutInSeconds);
+				_process.Start();
 
-				var expectedLine = _expectedLines[lineIndex];
+				var asyncTwoWayStreamsHandler = _asyncDuplexStreamHandlerFactory.Create(_process.StandardOutput,
+					_process.StandardInput);
 
-				if (actualLine != expectedLine)
-					throw new ScenarioAssertionException("Unexpected line", lineIndex, actualLine, expectedLine);
+				for (var lineIndex = 0; lineIndex < _lineAssertions.Count; lineIndex++)
+				{
+					var actualLine = asyncTwoWayStreamsHandler.ReadLine(ReadLineTimeoutInSeconds);
+					var assertion = _lineAssertions[lineIndex];
+
+					assertion.Assert(lineIndex, actualLine);
+				}
+
+				asyncTwoWayStreamsHandler.WaitForExit();
 			}
 		}
 	}

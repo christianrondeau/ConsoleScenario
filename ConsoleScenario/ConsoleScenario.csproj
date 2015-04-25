@@ -40,9 +40,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncDuplexStreamHandler.cs" />
+    <Compile Include="LineEqualsAssertion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scenario.cs" />
     <Compile Include="ScenarioAssertionException.cs" />
+    <Compile Include="ScenarioExtensions.cs" />
     <Compile Include="Scenarios.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
