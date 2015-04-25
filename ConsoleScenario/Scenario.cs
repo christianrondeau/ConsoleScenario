@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.Linq;
 
 namespace ConsoleScenario
 {
@@ -43,7 +42,7 @@ namespace ConsoleScenario
 				var output = asyncTwoWayStreamsHandler.ReadUntil(10, "");
 
 				if (output != _expectedOutput)
-					throw new Exception(string.Format("Invalid console output. Expected:{0}{1}{0}Received:{0}{2}", Environment.NewLine, _expectedOutput, output));
+					throw new ScenarioAssertionException("Invalid console output", output, _expectedOutput);
 			}
 		}
 	}
