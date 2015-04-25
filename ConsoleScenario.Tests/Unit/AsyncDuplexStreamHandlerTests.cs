@@ -28,6 +28,22 @@ namespace ConsoleScenario.Tests.Unit
 		}
 
 		[Test]
+		public void CanReadASingleLine()
+		{
+			var sr = new StringReader(String.Join(
+				Environment.NewLine,
+				"Line 1",
+				"Line 2"
+				));
+			var sw = new StringWriter();
+
+			var handler = new AsyncDuplexStreamHandler(sr, sw);
+
+			Assert.That(handler.ReadLine(0), Is.EqualTo("Line 1"));
+			Assert.That(handler.ReadLine(0), Is.EqualTo("Line 2"));
+		}
+
+		[Test]
 		public void CanReadUntilStringIsFound()
 		{
 			var sr = new StringReader(String.Join(

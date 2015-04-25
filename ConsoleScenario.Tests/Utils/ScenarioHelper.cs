@@ -18,17 +18,18 @@ namespace ConsoleScenario.Tests.Utils
 				var actualExceptionType = exc.GetType();
 
 				if (actualExceptionType != expectedExceptionType)
-					Assert.Fail("An exception of type {0} was expected, but am exception of type {1} was thrown", expectedExceptionType.Name, actualExceptionType.Name);
+					Assert.Fail("An exception of type {0} was expected, but an exception of type {1} was thrown with message: {2}", expectedExceptionType.Name, actualExceptionType.Name, exc.Message);
 
 				assert((T)exc);
 			}
 		}
 
-		public static Action<ScenarioAssertionException> Expect(string description, string actual, string expected)
+		public static Action<ScenarioAssertionException> Expect(string description, int lineNumber, string actual, string expected)
 		{
 			return delegate(ScenarioAssertionException exc)
 			{
 				Assert.That(exc.Description, Is.EqualTo(description));
+				Assert.That(exc.LineIndex, Is.EqualTo(lineNumber - 1));
 				Assert.That(exc.Actual, Is.EqualTo(actual));
 				Assert.That(exc.Expected, Is.EqualTo(expected));
 			};

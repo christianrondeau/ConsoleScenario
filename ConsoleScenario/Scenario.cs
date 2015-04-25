@@ -1,18 +1,21 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace ConsoleScenario
 {
 	public interface IScenario
 	{
-		IScenario Expect(string output);
+		IScenario Expect(params string[] lines);
 		void Run();
 	}
 
 	public class Scenario : IScenario
 	{
+		private const int ReadLineTimeoutInSeconds = 10;
+
 		private readonly Process _process;
-		private string _expectedOutput;
+		private readonly List<string> _expectedLines;
 		private readonly IAsyncDuplexStreamHandlerFactory _asyncDuplexStreamHandlerFactory;
 
 		public Scenario(Process process, IAsyncDuplexStreamHandlerFactory asyncDuplexStreamHandlerFactory)
@@ -22,11 +25,13 @@ namespace ConsoleScenario
 
 			_process = process;
 			_asyncDuplexStreamHandlerFactory = asyncDuplexStreamHandlerFactory;
+
+			_expectedLines = new List<string>();
 		}
 
-		public IScenario Expect(string output)
+		public IScenario Expect(params string[] lines)
 		{
-			_expectedOutput = output;
+			_expectedLines.AddRange(lines);
 			return this;
 		}
 
@@ -36,10 +41,15 @@ namespace ConsoleScenario
 
 			var asyncTwoWayStreamsHandler = _asyncDuplexStreamHandlerFactory.Create(_process.StandardOutput, _process.StandardInput);
 
-			var output = asyncTwoWayStreamsHandler.ReadUntil(10, "");
+			for (var lineIndex = 0; lineIndex < _expectedLines.Count; lineIndex++)
+			{
+				var actualLine = asyncTwoWayStreamsHandler.ReadLine(ReadLineTimeoutInSeconds);
 
-			if (output != _expectedOutput)
-				throw new ScenarioAssertionException("Invalid console output", output, _expectedOutput);
+				var expectedLine = _expectedLines[lineIndex];
+
+				if (actualLine != expectedLine)
+					throw new ScenarioAssertionException("Unexpected line", lineIndex, actualLine, expectedLine);
+			}
 		}
 	}
 }

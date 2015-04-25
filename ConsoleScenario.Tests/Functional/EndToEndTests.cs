@@ -9,35 +9,72 @@ namespace ConsoleScenario.Tests.Functional
 	{
 		public class OneLineTests
 		{
+			private const string TestName = "one-line";
+
 			[Test]
 			public void Success()
 			{
-				GivenATestConsoleScenario()
+				GivenATestConsoleScenario(TestName)
 					.Expect("Single line output.")
 					.Run();
 			}
 
 			[Test]
-			public void Failure()
+			public void FailureBecauseTextIsDifferent()
 			{
 				ScenarioHelper.Do(() =>
-					GivenATestConsoleScenario()
+					GivenATestConsoleScenario(TestName)
 						.Expect("This is not what I expected...")
 						.Run(),
 					ScenarioHelper.Expect(
-						"Invalid console output",
+						"Unexpected line",
+						1,
 						"Single line output.",
 						"This is not what I expected..."
 						));
 			}
 		}
 
-		private static IScenario GivenATestConsoleScenario()
+		public class MultiLinesTests
+		{
+			private const string TestName = "two-lines";
+
+			[Test]
+			public void Success()
+			{
+				GivenATestConsoleScenario(TestName)
+					.Expect(
+					"Line 1",
+					"Line 2"
+					)
+					.Run();
+			}
+
+			[Test]
+			public void FailureBecauseTextIsDifferent()
+			{
+				ScenarioHelper.Do(() =>
+					GivenATestConsoleScenario(TestName)
+						.Expect(
+							"Line 1",
+							"This one is wrong"
+						)
+						.Run(),
+					ScenarioHelper.Expect(
+						"Unexpected line",
+						2,
+						"Line 2",
+						"This one is wrong"
+						));
+			}
+		}
+
+		private static IScenario GivenATestConsoleScenario(string testName)
 		{
 			var appPath = Path.Combine(Path.GetDirectoryName(new Uri(typeof(EndToEndTests).Assembly.CodeBase).LocalPath),
 				@"ConsoleScenario.TestApp.exe");
 
-			return Scenarios.Create(appPath, "one-line");
+			return Scenarios.Create(appPath, testName);
 		}
 	}
 }

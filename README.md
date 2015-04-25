@@ -10,13 +10,16 @@ This project is not yet ready for general use. Not even alpha. Not even "hey loo
 
 Here is an overview of the main features that should be implemented
 
-- [ ] Ability to expect a line of console output
+- [X] Ability to expect a line of console output
 - [ ] Ability to expect multiple lines of console output
+- [ ] Validate if the console output is smaller or longer than expected
 - [ ] Ability to input something in the console
 - [ ] Ability to expect the console to close
 - [ ] Ability to provide a regex instead of a string
 - [ ] Ability to read a line of console output and place it in a variable, and then use it in later expects (e.g. as a callback per line)
 - [ ] Ability to private custom line assertion callbacks
+- [ ] Ensure Process is stopped if an assertion error is thrown, or if the Scenario is disposed
+- [ ] Determine whether "remaining" unasserted output is accepted or not
 
 ## License
 
