@@ -39,8 +39,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assertions\AssertionResult.cs" />
+    <Compile Include="Assertions\IAssertion.cs" />
+    <Compile Include="Assertions\IgnoreRemainingLinesAssertion.cs" />
     <Compile Include="AsyncDuplexStreamHandler.cs" />
-    <Compile Include="LineEqualsAssertion.cs" />
+    <Compile Include="Assertions\LineEqualsAssertion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scenario.cs" />
     <Compile Include="ScenarioAssertionException.cs" />

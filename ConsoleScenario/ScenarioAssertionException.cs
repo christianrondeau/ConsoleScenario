@@ -33,7 +33,6 @@ namespace ConsoleScenario
 			: base(BuildMessage(description, lineIndex, actual, expected))
 		{
 			if (description == null) throw new ArgumentNullException("description");
-			if (lineIndex < 0) throw new ArgumentException("Line index must be at least 0", "lineIndex");
 
 			_description = description;
 			_lineIndex = lineIndex;

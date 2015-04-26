@@ -43,9 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Unit\Assertions\IgnoreRemainingLinesAssertionTests.cs" />
     <Compile Include="Unit\AsyncDuplexStreamHandlerFactoryTests.cs" />
     <Compile Include="Unit\AsyncDuplexStreamHandlerTests.cs" />
-    <Compile Include="Unit\LineEqualsAssertionTests.cs" />
+    <Compile Include="Unit\Assertions\LineEqualsAssertionTests.cs" />
     <Compile Include="Utils\BlockingStream.cs" />
     <Compile Include="Utils\ScenarioHelper.cs" />
     <Compile Include="Unit\ScenarioAssertionExceptionTests.cs" />

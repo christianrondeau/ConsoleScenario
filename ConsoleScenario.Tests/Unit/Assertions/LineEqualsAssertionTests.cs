@@ -1,17 +1,18 @@
-﻿using ConsoleScenario.Tests.Utils;
+﻿using ConsoleScenario.Assertions;
+using ConsoleScenario.Tests.Utils;
 using NUnit.Framework;
 
-namespace ConsoleScenario.Tests.Unit
+namespace ConsoleScenario.Tests.Unit.Assertions
 {
 	public class LineEqualsAssertionTests
 	{
 		[Test]
 		public void DoesNothingIfLinesMatch()
 		{
-			new LineEqualsAssertion("Expected").Assert(0, "Expected");
-			Assert.Pass("No exception thrown when strings match");
+			Assert.That(
+				new LineEqualsAssertion("Expected").Assert(0, "Expected"),
+				Is.EqualTo(AssertionResult.MoveToNextAssertion));
 		}
-
 
 		[Test]
 		public void ThrowsWhenStringsDoNotMatch()
@@ -20,7 +21,6 @@ namespace ConsoleScenario.Tests.Unit
 				.Do(() => new LineEqualsAssertion("Expected").Assert(1, "Actual"),
 					ScenarioHelper.Expect("Unexpected line", 2, "Actual", "Expected"));
 		}
-
 
 		[Test]
 		public void ThrowsWhenActualIsNull()

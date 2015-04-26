@@ -1,12 +1,7 @@
 using System;
 
-namespace ConsoleScenario
+namespace ConsoleScenario.Assertions
 {
-	public interface IAssertion
-	{
-		void Assert(int lineIndex, string actualLine);
-	}
-
 	public class LineEqualsAssertion : IAssertion
 	{
 		public static IAssertion Create(string expectedLine)
@@ -22,13 +17,15 @@ namespace ConsoleScenario
 			if (expectedLine == null) throw new ArgumentNullException("expectedLine");
 		}
 
-		public void Assert(int lineIndex, string actualLine)
+		public AssertionResult Assert(int lineIndex, string actualLine)
 		{
 			if (actualLine == null)
 				throw new ScenarioAssertionException("Missing line", lineIndex, null, _expectedLine);
 
 			if (actualLine != _expectedLine)
 				throw new ScenarioAssertionException("Unexpected line", lineIndex, actualLine, _expectedLine);
+
+			return AssertionResult.MoveToNextAssertion;
 		}
 	}
 }

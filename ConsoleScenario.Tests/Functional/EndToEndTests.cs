@@ -60,6 +60,15 @@ namespace ConsoleScenario.Tests.Functional
 			}
 
 			[Test]
+			public void SuccessWithIgnoreRemaining()
+			{
+				GivenATestConsoleScenario(TestName)
+					.Expect("Line 1")
+					.IgnoreRemaining()
+					.Run();
+			}
+
+			[Test]
 			public void FailureBecauseTextIsDifferent()
 			{
 				ScenarioHelper.Do(() =>

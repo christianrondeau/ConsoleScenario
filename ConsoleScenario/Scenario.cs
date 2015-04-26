@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using ConsoleScenario.Assertions;
 
 namespace ConsoleScenario
 {
@@ -49,19 +50,26 @@ namespace ConsoleScenario
 				var asyncTwoWayStreamsHandler = _asyncDuplexStreamHandlerFactory.Create(_process.StandardOutput,
 					_process.StandardInput);
 
-				var lineIndex = 0;
-				for (; lineIndex < _lineAssertions.Count; lineIndex++)
-				{
-					var actualLine = asyncTwoWayStreamsHandler.ReadLine(ReadLineTimeoutInSeconds);
-					var assertion = _lineAssertions[lineIndex];
+				var lineIndex = -1;
+				var assertionsEnumerator = _lineAssertions.GetEnumerator();
 
-					assertion.Assert(lineIndex, actualLine);
+				while(assertionsEnumerator.MoveNext())
+				{
+					var assertion = assertionsEnumerator.Current;
+					if (assertion == null) break;
+					string actualLine;
+
+					do
+					{
+						lineIndex++;
+						actualLine = asyncTwoWayStreamsHandler.ReadLine(ReadLineTimeoutInSeconds);
+					} while (assertion.Assert(lineIndex, actualLine) == AssertionResult.KeepUsingSameAssertion && actualLine != null);
 				}
 
 				var extraneousLine = asyncTwoWayStreamsHandler.ReadLine(ReadLineTimeoutInSeconds);
 
 				if (extraneousLine != null)
-					throw new ScenarioAssertionException("Extraneous line", lineIndex, extraneousLine, null);
+					throw new ScenarioAssertionException("Extraneous line", lineIndex + 1, extraneousLine, null);
 
 				asyncTwoWayStreamsHandler.WaitForExit();
 			}
