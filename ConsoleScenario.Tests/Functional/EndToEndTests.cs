@@ -80,7 +80,7 @@ namespace ConsoleScenario.Tests.Functional
 					ScenarioHelper.Expect(
 						"Extraneous line",
 						2,
-						"Line 1",
+						"Line 2",
 						null
 						));
 			}
@@ -98,7 +98,7 @@ namespace ConsoleScenario.Tests.Functional
 						.Run(),
 					ScenarioHelper.Expect(
 						"Missing line",
-						2,
+						3,
 						null,
 						"Line 3"
 						));

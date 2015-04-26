@@ -49,7 +49,12 @@ namespace ConsoleScenario
 			{
 				var timeout = TimeSpan.FromSeconds(timeoutInSeconds);
 				if (!_pendingOutputLines.TryTake(out line, timeout))
+				{
+					if (_pendingOutputLines.IsAddingCompleted)
+						return null;
+
 					throw new TimeoutException(string.Format(@"No result in alloted time: {0:ss\.ffff}s", timeout));
+				}
 			}
 			else
 			{
@@ -80,10 +85,15 @@ namespace ConsoleScenario
 			while ((line = _output.ReadLine()) != null)
 			{
 #if(DEBUG)
-				Debug.WriteLine(line);
+				Debug.WriteLine("DEBUG: " + line);
 #endif
 				_pendingOutputLines.Add(line);
 			}
+
+#if(DEBUG)
+			Debug.WriteLine("DEBUG: >> Console Exit");
+#endif
+			_pendingOutputLines.CompleteAdding();
 		}
 	}
 }

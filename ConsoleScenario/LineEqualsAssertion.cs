@@ -24,6 +24,9 @@ namespace ConsoleScenario
 
 		public void Assert(int lineIndex, string actualLine)
 		{
+			if (actualLine == null)
+				throw new ScenarioAssertionException("Missing line", lineIndex, null, _expectedLine);
+
 			if (actualLine != _expectedLine)
 				throw new ScenarioAssertionException("Unexpected line", lineIndex, actualLine, _expectedLine);
 		}

@@ -58,13 +58,10 @@ namespace ConsoleScenario
 					assertion.Assert(lineIndex, actualLine);
 				}
 
-				if (!_process.HasExited)
-				{
-					var extraneousLine = asyncTwoWayStreamsHandler.ReadLine(ReadLineTimeoutInSeconds);
+				var extraneousLine = asyncTwoWayStreamsHandler.ReadLine(ReadLineTimeoutInSeconds);
 
-					if (extraneousLine != null)
-						throw new ScenarioAssertionException("Extraneous line", lineIndex, extraneousLine, null);
-				}
+				if (extraneousLine != null)
+					throw new ScenarioAssertionException("Extraneous line", lineIndex, extraneousLine, null);
 
 				asyncTwoWayStreamsHandler.WaitForExit();
 			}

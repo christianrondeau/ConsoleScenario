@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Unit\AsyncDuplexStreamHandlerFactoryTests.cs" />
     <Compile Include="Unit\AsyncDuplexStreamHandlerTests.cs" />
+    <Compile Include="Unit\LineEqualsAssertionTests.cs" />
     <Compile Include="Utils\BlockingStream.cs" />
     <Compile Include="Utils\ScenarioHelper.cs" />
     <Compile Include="Unit\ScenarioAssertionExceptionTests.cs" />

@@ -57,6 +57,18 @@ namespace ConsoleScenario.Tests.Unit
 		}
 
 		[Test]
+		public void CanReadUntilStreamComplete()
+		{
+			var sr = new StringReader("");
+			var sw = new StringWriter();
+
+			var handler = new AsyncDuplexStreamHandler(sr, sw);
+
+			handler.ReadLine(0.1);
+			Assert.That(handler.ReadLine(0.1), Is.Null);
+		}
+
+		[Test]
 		public void WaitForExitExitsImmediatelyWhenNothingToWaitFor()
 		{
 			var sr = new StringReader("");
