@@ -40,13 +40,22 @@ namespace ConsoleScenario.Tests.Functional
 			private const string TestName = "two-lines";
 
 			[Test]
-			public void Success()
+			public void SuccessWithMultilineExpect()
 			{
 				GivenATestConsoleScenario(TestName)
 					.Expect(
 					"Line 1",
 					"Line 2"
 					)
+					.Run();
+			}
+
+			[Test]
+			public void SuccessWithMultipleExpects()
+			{
+				GivenATestConsoleScenario(TestName)
+					.Expect("Line 1")
+					.Expect("Line 2")
 					.Run();
 			}
 
