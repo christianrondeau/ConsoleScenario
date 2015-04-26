@@ -29,7 +29,7 @@ namespace ConsoleScenario.Tests.Utils
 			return delegate(ScenarioAssertionException exc)
 			{
 				Assert.That(exc.Description, Is.EqualTo(description));
-				Assert.That(exc.LineIndex, Is.EqualTo(lineNumber - 1));
+				Assert.That(exc.LineIndex, Is.EqualTo(lineNumber - 1), "Line Index should be the Line Number - 1");
 				Assert.That(exc.Actual, Is.EqualTo(actual));
 				Assert.That(exc.Expected, Is.EqualTo(expected));
 			};

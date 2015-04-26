@@ -39,7 +39,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assertions\AssertionBase.cs" />
     <Compile Include="Assertions\AssertionResult.cs" />
+    <Compile Include="Assertions\NoExtraneousLinesAssertion.cs" />
+    <Compile Include="ConsoleScenarioDefaults.cs" />
     <Compile Include="Assertions\IAssertion.cs" />
     <Compile Include="Assertions\IgnoreRemainingLinesAssertion.cs" />
     <Compile Include="AsyncDuplexStreamHandler.cs" />

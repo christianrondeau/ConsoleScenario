@@ -30,7 +30,12 @@ namespace ConsoleScenario
 		}
 
 		public ScenarioAssertionException(string description, int lineIndex, string actual, string expected)
-			: base(BuildMessage(description, lineIndex, actual, expected))
+			: this(description, lineIndex, actual, expected, null)
+		{
+		}
+
+		public ScenarioAssertionException(string description, int lineIndex, string actual, string expected, Exception innerException)
+			: base(BuildMessage(description, lineIndex, actual, expected), innerException)
 		{
 			if (description == null) throw new ArgumentNullException("description");
 

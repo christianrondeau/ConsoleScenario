@@ -2,7 +2,7 @@ using System;
 
 namespace ConsoleScenario.Assertions
 {
-	public class LineEqualsAssertion : IAssertion
+	public class LineEqualsAssertion : AssertionBase, IAssertion
 	{
 		public static IAssertion Create(string expectedLine)
 		{
@@ -12,6 +12,13 @@ namespace ConsoleScenario.Assertions
 		private readonly string _expectedLine;
 
 		public LineEqualsAssertion(string expectedLine)
+		{
+			_expectedLine = expectedLine;
+			if (expectedLine == null) throw new ArgumentNullException("expectedLine");	
+		}
+
+		public LineEqualsAssertion(string expectedLine, TimeSpan timeout)
+			: base(timeout)
 		{
 			_expectedLine = expectedLine;
 			if (expectedLine == null) throw new ArgumentNullException("expectedLine");

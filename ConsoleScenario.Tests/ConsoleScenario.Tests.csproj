@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Unit\Assertions\IgnoreRemainingLinesAssertionTests.cs" />
+    <Compile Include="Unit\Assertions\NoExtraneousLinesAssertionTests.cs" />
     <Compile Include="Unit\AsyncDuplexStreamHandlerFactoryTests.cs" />
     <Compile Include="Unit\AsyncDuplexStreamHandlerTests.cs" />
     <Compile Include="Unit\Assertions\LineEqualsAssertionTests.cs" />

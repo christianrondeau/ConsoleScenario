@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using ConsoleScenario.Tests.Utils;
 using NUnit.Framework;
@@ -91,9 +92,8 @@ namespace ConsoleScenario.Tests.Functional
 			{
 				ScenarioHelper.Do(() =>
 					GivenATestConsoleScenario(TestName)
-						.Expect(
-							"Line 1"
-						)
+						.Expect("Line 1")
+						.ExpectNothingElse()
 						.Run(),
 					ScenarioHelper.Expect(
 						"Extraneous line",
@@ -120,6 +120,49 @@ namespace ConsoleScenario.Tests.Functional
 						null,
 						"Line 3"
 						));
+			}
+		}
+
+		public class TimeoutTests
+		{
+			private const string TestName = "timeout";
+
+			[Test]
+			public void FailureBecauseConsoleDidNotRespond()
+			{
+
+				ScenarioHelper.Do(() =>
+					GivenATestConsoleScenario(TestName)
+						.Expect("Waiting for 2 seconds...")
+						.Expect("This line will never come.", TimeSpan.FromSeconds(0.5))
+						.Run(),
+					ScenarioHelper.Expect(
+						"Timeout",
+						2,
+						null,
+						null
+						));
+			}
+
+			[Test]
+			public void FailureAndKillConsoleWhenNoTestsLeft()
+			{
+				var stopwatch = new Stopwatch();
+				stopwatch.Start();
+
+				ScenarioHelper.Do(() =>
+					GivenATestConsoleScenario(TestName)
+						.Expect("Waiting for 2 seconds...", TimeSpan.FromSeconds(0.2))
+						.Run(TimeSpan.FromSeconds(0.2)),
+					ScenarioHelper.Expect(
+						"Process wait for exit timeout",
+						2,
+						null,
+						null
+						));
+
+				stopwatch.Stop();
+				Assert.That(stopwatch.Elapsed, Is.LessThan(TimeSpan.FromSeconds(2)), "Console should be killed if waiting for too long");
 			}
 		}
 

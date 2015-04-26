@@ -7,15 +7,13 @@ namespace ConsoleScenario
 {
 	public interface IScenario
 	{
-		void Run();
+		void Run(TimeSpan? waitForExit = null);
 		void AddAssertion(IAssertion assertion);
 		void AddAssertions(IEnumerable<IAssertion> assertions);
 	}
 
 	public class Scenario : IScenario
 	{
-		private const double ReadLineTimeoutInSeconds = 0.5d;
-
 		private readonly Process _process;
 		private readonly List<IAssertion> _lineAssertions;
 		private readonly IAsyncDuplexStreamHandlerFactory _asyncDuplexStreamHandlerFactory;
@@ -41,37 +39,71 @@ namespace ConsoleScenario
 			_lineAssertions.AddRange(assertions);
 		}
 
-		public void Run()
+		public void Run(TimeSpan? waitForExit = null)
 		{
 			using (_process)
 			{
-				_process.Start();
-
-				var asyncTwoWayStreamsHandler = _asyncDuplexStreamHandlerFactory.Create(_process.StandardOutput,
-					_process.StandardInput);
-
 				var lineIndex = -1;
-				var assertionsEnumerator = _lineAssertions.GetEnumerator();
-
-				while(assertionsEnumerator.MoveNext())
+				Exception scenarioAssertionException = null;
+				try
 				{
-					var assertion = assertionsEnumerator.Current;
-					if (assertion == null) break;
-					string actualLine;
+					_process.Start();
 
-					do
+					var asyncTwoWayStreamsHandler = _asyncDuplexStreamHandlerFactory.Create(_process.StandardOutput,
+						_process.StandardInput);
+
+					var assertionsEnumerator = _lineAssertions.GetEnumerator();
+
+					while (assertionsEnumerator.MoveNext())
 					{
-						lineIndex++;
-						actualLine = asyncTwoWayStreamsHandler.ReadLine(ReadLineTimeoutInSeconds);
-					} while (assertion.Assert(lineIndex, actualLine) == AssertionResult.KeepUsingSameAssertion && actualLine != null);
+						var assertion = assertionsEnumerator.Current;
+						if (assertion == null) break;
+						string actualLine;
+
+						do
+						{
+							lineIndex++;
+							actualLine = ReadLineOrTimeout(lineIndex, asyncTwoWayStreamsHandler, assertion.Timeout);
+						} while (assertion.Assert(lineIndex, actualLine) == AssertionResult.KeepUsingSameAssertion && actualLine != null);
+					}
 				}
+				catch (ScenarioAssertionException exc)
+				{
+					scenarioAssertionException = exc;
+					throw;
+				}
+				finally
+				{
+					if (!_process.HasExited)
+					{
+						_process.CloseMainWindow();
 
-				var extraneousLine = asyncTwoWayStreamsHandler.ReadLine(ReadLineTimeoutInSeconds);
+						if (!_process.WaitForExit(
+							waitForExit.HasValue
+								? (int) waitForExit.Value.TotalMilliseconds
+								: (int) ConsoleScenarioDefaults.Timeout.TotalSeconds))
+						{
+							_process.Kill();
+							if (scenarioAssertionException == null)
+							{
+								var lineThatNeverCameIndex = lineIndex + 1;
+								throw new ScenarioAssertionException("Process wait for exit timeout", lineThatNeverCameIndex, null, null);
+							}
+						}
+					}
+				}
+			}
+		}
 
-				if (extraneousLine != null)
-					throw new ScenarioAssertionException("Extraneous line", lineIndex + 1, extraneousLine, null);
-
-				asyncTwoWayStreamsHandler.WaitForExit();
+		private static string ReadLineOrTimeout(int lineIndex, IAsyncDuplexStreamHandler asyncTwoWayStreamsHandler, TimeSpan timeout)
+		{
+			try
+			{
+				return asyncTwoWayStreamsHandler.ReadLine(timeout.TotalSeconds);
+			}
+			catch (TimeoutException exc)
+			{
+				throw new ScenarioAssertionException("Timeout", lineIndex, null, null, exc);
 			}
 		}
 	}

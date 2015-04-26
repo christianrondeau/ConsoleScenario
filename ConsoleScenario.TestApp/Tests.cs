@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace ConsoleScenario.TestApp
 {
@@ -11,6 +12,7 @@ namespace ConsoleScenario.TestApp
 			{
 				{"one-line", OneLine},
 				{"two-lines", TwoLines},
+				{"timeout", Timeout},
 			};
 		}
 
@@ -23,6 +25,13 @@ namespace ConsoleScenario.TestApp
 		public static void OneLine()
 		{
 			Console.WriteLine("Single line output.");
+		}
+
+		public static void Timeout()
+		{
+			Console.WriteLine("Waiting for 2 seconds...");
+			Thread.Sleep(TimeSpan.FromSeconds(120));
+			Console.WriteLine("Waiting complete.");
 		}
 	}
 }
