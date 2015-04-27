@@ -8,14 +8,14 @@ namespace ConsoleScenario
 	public interface IScenario
 	{
 		void Run(TimeSpan? waitForExit = null);
-		void AddAssertion(IAssertion assertion);
-		void AddAssertions(IEnumerable<IAssertion> assertions);
+		void AddAssertion(IScenarioStep assertion);
+		void AddAssertions(IEnumerable<IScenarioStep> assertions);
 	}
 
 	public class Scenario : IScenario
 	{
 		private readonly Process _process;
-		private readonly List<IAssertion> _lineAssertions;
+		private readonly List<IScenarioStep> _steps;
 		private readonly IAsyncDuplexStreamHandlerFactory _asyncDuplexStreamHandlerFactory;
 
 		public Scenario(Process process, IAsyncDuplexStreamHandlerFactory asyncDuplexStreamHandlerFactory)
@@ -26,17 +26,17 @@ namespace ConsoleScenario
 			_process = process;
 			_asyncDuplexStreamHandlerFactory = asyncDuplexStreamHandlerFactory;
 
-			_lineAssertions = new List<IAssertion>();
+			_steps = new List<IScenarioStep>();
 		}
 
-		public void AddAssertion(IAssertion assertion)
+		public void AddAssertion(IScenarioStep step)
 		{
-			_lineAssertions.Add(assertion);
+			_steps.Add(step);
 		}
 
-		public void AddAssertions(IEnumerable<IAssertion> assertions)
+		public void AddAssertions(IEnumerable<IScenarioStep> steps)
 		{
-			_lineAssertions.AddRange(assertions);
+			_steps.AddRange(steps);
 		}
 
 		public void Run(TimeSpan? waitForExit = null)
@@ -52,19 +52,38 @@ namespace ConsoleScenario
 					var asyncTwoWayStreamsHandler = _asyncDuplexStreamHandlerFactory.Create(_process.StandardOutput,
 						_process.StandardInput);
 
-					var assertionsEnumerator = _lineAssertions.GetEnumerator();
+					var stepsEnumerator = _steps.GetEnumerator();
 
-					while (assertionsEnumerator.MoveNext())
+					while (stepsEnumerator.MoveNext())
 					{
-						var assertion = assertionsEnumerator.Current;
-						if (assertion == null) break;
-						string actualLine;
+						var step = stepsEnumerator.Current;
+						if (step == null) break;
+						string actualLine = null;
 
+						AssertionResult assertionResult;
 						do
 						{
-							lineIndex++;
-							actualLine = ReadLineOrTimeout(lineIndex, asyncTwoWayStreamsHandler, assertion.Timeout);
-						} while (assertion.Assert(lineIndex, actualLine) == AssertionResult.KeepUsingSameAssertion && actualLine != null);
+							var input = step as IInput;
+							if (input != null)
+							{
+								asyncTwoWayStreamsHandler.WriteLine(input.Value);
+								assertionResult = AssertionResult.MoveToNextAssertion;
+								continue;
+							}
+
+							var assertion = step as IAssertion;
+							if (assertion != null)
+							{
+
+								lineIndex++;
+								actualLine = ReadLineOrTimeout(lineIndex, asyncTwoWayStreamsHandler, assertion.Timeout);
+								assertionResult = assertion.Assert(lineIndex, actualLine);
+							}
+							else
+							{
+								throw new NotSupportedException("Only IInput and IAssertion are supported");
+							}
+						} while (assertionResult == AssertionResult.KeepUsingSameAssertion && actualLine != null);
 					}
 				}
 				catch (ScenarioAssertionException exc)

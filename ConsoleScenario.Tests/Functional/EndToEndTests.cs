@@ -123,6 +123,21 @@ namespace ConsoleScenario.Tests.Functional
 			}
 		}
 
+		public class InputTests
+		{
+			private const string TestName = "print-input";
+
+			[Test]
+			public void SuccessWithInputValue()
+			{
+				GivenATestConsoleScenario(TestName)
+					.Expect("Enter a value:")
+					.Input("my text")
+					.Expect("You have entered: my text")
+					.Run();
+			}
+		}
+
 		public class TimeoutTests
 		{
 			private const string TestName = "timeout";

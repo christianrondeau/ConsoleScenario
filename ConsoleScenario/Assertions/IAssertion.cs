@@ -2,9 +2,18 @@ using System;
 
 namespace ConsoleScenario.Assertions
 {
-	public interface IAssertion
+	public interface IScenarioStep
 	{
-		AssertionResult Assert(int lineIndex, string actualLine);
+	}
+
+	public interface IInput : IScenarioStep
+	{
+		string Value { get; }
+	}
+
+	public interface IAssertion : IScenarioStep
+	{
 		TimeSpan Timeout { get; }
+		AssertionResult Assert(int lineIndex, string actualLine);
 	}
 }

@@ -13,6 +13,7 @@ namespace ConsoleScenario.TestApp
 				{"one-line", OneLine},
 				{"two-lines", TwoLines},
 				{"timeout", Timeout},
+				{"print-input", PrintInput}
 			};
 		}
 
@@ -32,6 +33,13 @@ namespace ConsoleScenario.TestApp
 			Console.WriteLine("Waiting for 2 seconds...");
 			Thread.Sleep(TimeSpan.FromSeconds(120));
 			Console.WriteLine("Waiting complete.");
+		}
+
+		public static void PrintInput()
+		{
+			Console.WriteLine("Enter a value:");
+			var value = Console.ReadLine();
+			Console.WriteLine("You have entered: " + value);
 		}
 	}
 }

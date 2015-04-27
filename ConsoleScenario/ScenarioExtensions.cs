@@ -6,6 +6,12 @@ namespace ConsoleScenario
 {
 	public static class ScenarioExtensions
 	{
+		public static IScenario Input(this IScenario scenario, string value)
+		{
+			scenario.AddAssertion(new InputLineAssertion(value));
+			return scenario;
+		}
+
 		public static IScenario Expect(this IScenario scenario, string line, TimeSpan timeout)
 		{
 			scenario.AddAssertion(new LineEqualsAssertion(line, timeout));
