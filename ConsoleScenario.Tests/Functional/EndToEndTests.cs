@@ -183,8 +183,12 @@ namespace ConsoleScenario.Tests.Functional
 
 		private static IScenario GivenATestConsoleScenario(string testName)
 		{
-			var appPath = Path.Combine(Path.GetDirectoryName(new Uri(typeof(EndToEndTests).Assembly.CodeBase).LocalPath),
-				@"ConsoleScenario.TestApp.exe");
+			var codebasePath = Path.GetDirectoryName(new Uri(typeof (EndToEndTests).Assembly.CodeBase).LocalPath);
+
+			if (codebasePath == null)
+				throw new NullReferenceException("The LocalPath of the ConsoleScenario.Tests assembly resolved to null");
+
+			var appPath = Path.Combine(codebasePath, @"ConsoleScenario.TestApp.exe");
 
 			return Scenarios.Create(appPath, testName);
 		}

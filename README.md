@@ -16,7 +16,7 @@ Here is an overview of the main features that should be implemented
 - [X] If the console closes earlier than expected, don't wait for another line (`AsyncDuplexStreamHandler`)
 - [X] Determine whether "remaining" unasserted output is accepted or not
 - [X] Kill the console if the test times out and the console does not close itself
-- [ ] Ability to input something in the console
+- [X] Ability to input something in the console
 - [ ] Ability to expect the console to close
 - [ ] Ability to input something in the console when there is a prompt
 - [ ] Ability to provide a regex instead of a string
@@ -29,6 +29,7 @@ Here is an overview of the main features that should be implemented
 - [ ] Ensure Process is stopped if an assertion error is thrown, or if the Scenario is disposed
 - [ ] Handle console errors and forward them as assertion failed
 - [ ] Expect console errors
+- [ ] Input and output characters instead of lines
 
 ## Example
 

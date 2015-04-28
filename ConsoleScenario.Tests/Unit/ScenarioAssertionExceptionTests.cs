@@ -1,7 +1,7 @@
 ﻿using ConsoleScenario.Tests.Utils;
 using NUnit.Framework;
 
-namespace ConsoleScenario.Tests
+namespace ConsoleScenario.Tests.Unit
 {
 	public class ScenarioAssertionExceptionTests
 	{
