@@ -24,15 +24,15 @@ namespace ConsoleScenario
 			return scenario;
 		}
 
-		public static IScenario Any(this IScenario scenario, TimeSpan timeout)
+		public static IScenario Any(this IScenario scenario, int count, TimeSpan timeout)
 		{
-			scenario.AddAssertion(new AnyLineAssertion(timeout));
+			scenario.AddAssertion(new AnyLineAssertion(count, timeout));
 			return scenario;
 		}
 
-		public static IScenario Any(this IScenario scenario)
+		public static IScenario Any(this IScenario scenario, int count = 1)
 		{
-			scenario.AddAssertion(new AnyLineAssertion());
+			scenario.AddAssertion(new AnyLineAssertion(count));
 			return scenario;
 		}
 

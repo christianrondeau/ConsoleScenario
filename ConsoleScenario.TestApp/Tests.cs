@@ -12,9 +12,15 @@ namespace ConsoleScenario.TestApp
 			{
 				{"one-line", OneLine},
 				{"two-lines", TwoLines},
+				{"three-lines", ThreeLines},
 				{"timeout", Timeout},
 				{"print-input", PrintInput}
 			};
+		}
+
+		public static void OneLine()
+		{
+			Console.WriteLine("Single line output.");
 		}
 
 		public static void TwoLines()
@@ -23,9 +29,11 @@ namespace ConsoleScenario.TestApp
 			Console.WriteLine("Line 2");
 		}
 
-		public static void OneLine()
+		public static void ThreeLines()
 		{
-			Console.WriteLine("Single line output.");
+			Console.WriteLine("This is the first line.");
+			Console.WriteLine("This is the middle line.");
+			Console.WriteLine("This is the last line.");
 		}
 
 		public static void Timeout()
