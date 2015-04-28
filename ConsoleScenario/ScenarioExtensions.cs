@@ -24,6 +24,18 @@ namespace ConsoleScenario
 			return scenario;
 		}
 
+		public static IScenario Expect(this IScenario scenario, Func<string, bool> callback, TimeSpan timeout)
+		{
+			scenario.AddAssertion(new CallbackAssertion(callback, timeout));
+			return scenario;
+		}
+
+		public static IScenario Expect(this IScenario scenario, Func<string, bool> callback)
+		{
+			scenario.AddAssertion(new CallbackAssertion(callback));
+			return scenario;
+		}
+
 		public static IScenario Any(this IScenario scenario, int count, TimeSpan timeout)
 		{
 			scenario.AddAssertion(new AnyLineAssertion(count, timeout));

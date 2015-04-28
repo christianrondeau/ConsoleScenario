@@ -19,7 +19,7 @@ Here is an overview of the main features that should be implemented
 - [X] Ability to input something in the console
 - [X] Ability to expect any line(s) of text of console output
 - [ ] Ability to provide a regex instead of a string
-- [ ] Ability to assert a line using a callback (especially for Any)
+- [X] Ability to assert a line using a callback
 - [ ] Ability to specify "until", e.g. "until a line contains 'COMPLETE'"
 - [ ] Ability to input something in the console when there is a prompt
 - [ ] Ability to wait until a specific line using a callback (especially for Any)

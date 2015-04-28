@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assertions\AnyLineAssertion.cs" />
+    <Compile Include="Assertions\CallbackAssertion.cs" />
     <Compile Include="Assertions\InputLineAssertion.cs" />
     <Compile Include="Assertions\AssertionBase.cs" />
     <Compile Include="Assertions\AssertionResult.cs" />
