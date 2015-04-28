@@ -31,16 +31,26 @@ Here is an overview of the main features that should be implemented
 - [ ] Input and output characters instead of lines
 - [ ] Nice documentation
 
+### Other TODOs
+
+- [ ] Refactor to avoid having two constructors for every `ScenarioExtensions` entry
+- [ ] Refactor the `Scenario.AddStep` and instead use `AddAssertion` and `AddInput`
+- [ ] Move IInput out of the Assertions folder
+- [ ] Refactor the multi-line and single-line assertions to avoid duplication (e.g. `scenario.Any().Times(5)` where `.Times`, would simply wrap the assertion in a repeater. `.Once` would do nothing (readability) and `Until` would allow using any assertion)
+- [ ] To allow `Until`, split the assertion "container" and the assertion code itself
+
 ## Example
 
 ```csharp
 Scenarios.Create("myapp.exe", "-argument")
-  .Expect("This should be the first line")
   .Expect(
-    "You can also",
-    "Expect multiple lines"
+    "Here is the console output",
+    "That you expect"
   )
   .Expect("You can specify a timeout per line", TimeSpan.FromSeconds(0.5))
+  .Expect(line => line.Contains("You can also specify callbacks"))
+  .Any(3) // Or just skip a few lines
+  .Input("You can input something too!")
   .ExpectNothingElse() // or .IgnoreRemaining()
   .Run(),
 ```
