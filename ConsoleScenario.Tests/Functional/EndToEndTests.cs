@@ -61,6 +61,15 @@ namespace ConsoleScenario.Tests.Functional
 			}
 
 			[Test]
+			public void SuccessWithAny()
+			{
+				GivenATestConsoleScenario(TestName)
+					.Any()
+					.Expect("Line 2")
+					.Run();
+			}
+
+			[Test]
 			public void SuccessWithIgnoreRemaining()
 			{
 				GivenATestConsoleScenario(TestName)

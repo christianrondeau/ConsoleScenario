@@ -17,10 +17,10 @@ Here is an overview of the main features that should be implemented
 - [X] Determine whether "remaining" unasserted output is accepted or not
 - [X] Kill the console if the test times out and the console does not close itself
 - [X] Ability to input something in the console
+- [X] Ability to expect any line of text of console output
 - [ ] Ability to expect the console to close
 - [ ] Ability to input something in the console when there is a prompt
 - [ ] Ability to provide a regex instead of a string
-- [ ] Ability to expect any line of text of console output
 - [ ] Ability to specify "until", e.g. "until a line contains 'COMPLETE'"
 - [ ] Ability to assert a line using a callback (especially for Any)
 - [ ] Ability to wait until a specific line using a callback (especially for Any)
@@ -30,6 +30,7 @@ Here is an overview of the main features that should be implemented
 - [ ] Handle console errors and forward them as assertion failed
 - [ ] Expect console errors
 - [ ] Input and output characters instead of lines
+- [ ] Nice documentation
 
 ## Example
 

@@ -24,6 +24,18 @@ namespace ConsoleScenario
 			return scenario;
 		}
 
+		public static IScenario Any(this IScenario scenario, TimeSpan timeout)
+		{
+			scenario.AddAssertion(new AnyLineAssertion(timeout));
+			return scenario;
+		}
+
+		public static IScenario Any(this IScenario scenario)
+		{
+			scenario.AddAssertion(new AnyLineAssertion());
+			return scenario;
+		}
+
 		public static IScenario ExpectNothingElse(this IScenario scenario)
 		{
 			scenario.AddAssertion(new NoExtraneousLinesAssertion());
