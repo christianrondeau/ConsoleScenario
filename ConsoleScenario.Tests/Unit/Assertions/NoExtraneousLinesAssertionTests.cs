@@ -1,5 +1,4 @@
 ﻿using ConsoleScenario.Assertions;
-using ConsoleScenario.Tests.Utils;
 using NUnit.Framework;
 
 namespace ConsoleScenario.Tests.Unit.Assertions
@@ -7,19 +6,23 @@ namespace ConsoleScenario.Tests.Unit.Assertions
 	public class NoExtraneousLinesAssertionTests
 	{
 		[Test]
-		public void DoesNothingIfLinesMatch()
+		public void NullPass()
 		{
 			Assert.That(
-				new NoExtraneousLinesAssertion().Assert(0, null),
-				Is.EqualTo(AssertionResult.KeepUsingSameAssertion));
+				new NoExtraneousLinesAssertion().Assert(null).Success,
+				Is.True);
 		}
 
 		[Test]
-		public void ThrowsWhenStringsDoNotMatch()
+		public void AnyStringFail()
 		{
-			ScenarioHelper
-				.Do(() => new NoExtraneousLinesAssertion().Assert(5, "Unexpected"),
-					ScenarioHelper.Expect("Extraneous line", 6, "Unexpected", null));
+			Assert.That(
+				new NoExtraneousLinesAssertion().Assert("Anything"),
+				Is.EqualTo(new AssertionResult
+				{
+					Success = false,
+					Message = "Extraneous line"
+				}));
 		}
 	}
 }

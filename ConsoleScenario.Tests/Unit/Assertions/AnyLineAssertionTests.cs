@@ -1,5 +1,4 @@
 ﻿using ConsoleScenario.Assertions;
-using ConsoleScenario.Tests.Utils;
 using NUnit.Framework;
 
 namespace ConsoleScenario.Tests.Unit.Assertions
@@ -7,25 +6,23 @@ namespace ConsoleScenario.Tests.Unit.Assertions
 	public class AnyLineAssertionTests
 	{
 		[Test]
-		public void ReturnsMoveToNextAssertionUntilNoLinesLeft()
+		public void AnyStringPass()
 		{
-			var assertion = new AnyLineAssertion(2);
-
 			Assert.That(
-				assertion.Assert(0, "Anything"),
-				Is.EqualTo(AssertionResult.KeepUsingSameAssertion));
-
-			Assert.That(
-				assertion.Assert(0, "Anything"),
-				Is.EqualTo(AssertionResult.MoveToNextAssertion));
+				new AnyLineAssertion().Assert("Anything").Success,
+				Is.True);
 		}
 
 		[Test]
-		public void ThrowsIfNoLinesLeft()
+		public void NullFail()
 		{
-			ScenarioHelper
-				.Do(() => new AnyLineAssertion(1).Assert(15, null),
-					ScenarioHelper.Expect("Missing line", 16, null, null));
+			Assert.That(
+				new AnyLineAssertion().Assert(null),
+				Is.EqualTo(new AssertionResult
+				{
+					Success = false,
+					Message = "Missing line"
+				}));
 		}
 	}
 }

@@ -1,5 +1,4 @@
 ﻿using ConsoleScenario.Assertions;
-using ConsoleScenario.Tests.Utils;
 using NUnit.Framework;
 
 namespace ConsoleScenario.Tests.Unit.Assertions
@@ -10,24 +9,34 @@ namespace ConsoleScenario.Tests.Unit.Assertions
 		public void DoesNothingIfLinesMatch()
 		{
 			Assert.That(
-				new LineEqualsAssertion("Expected").Assert(0, "Expected"),
-				Is.EqualTo(AssertionResult.MoveToNextAssertion));
+				new LineEqualsAssertion("Expected").Assert("Expected").Success,
+				Is.True);
 		}
 
 		[Test]
-		public void ThrowsWhenStringsDoNotMatch()
+		public void DifferentStringsFail()
 		{
-			ScenarioHelper
-				.Do(() => new LineEqualsAssertion("Expected").Assert(1, "Actual"),
-					ScenarioHelper.Expect("Unexpected line", 2, "Actual", "Expected"));
+			Assert.That(
+				new LineEqualsAssertion("Expected").Assert("Actual"),
+				Is.EqualTo(new AssertionResult
+				{
+					Success = false,
+					Message = "Unexpected line",
+					Expected = "Expected"
+				}));
 		}
 
 		[Test]
-		public void ThrowsWhenActualIsNull()
+		public void NullFail()
 		{
-			ScenarioHelper
-				.Do(() => new LineEqualsAssertion("Expected").Assert(122, null),
-					ScenarioHelper.Expect("Missing line", 123, null, "Expected"));
+			Assert.That(
+				new LineEqualsAssertion("Expected").Assert(null),
+				Is.EqualTo(new AssertionResult
+				{
+					Success = false,
+					Message = "Missing line",
+					Expected = "Expected"
+				}));
 		}
 	}
 }

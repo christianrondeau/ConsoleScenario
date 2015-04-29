@@ -17,15 +17,14 @@ namespace ConsoleScenario.Assertions
 			if (expectedLine == null) throw new ArgumentNullException("expectedLine");	
 		}
 
-		public AssertionResult Assert(int lineIndex, string actualLine)
+		public AssertionResult Assert(string actualLine)
 		{
 			if (actualLine == null)
-				throw new ScenarioAssertionException("Missing line", lineIndex, null, _expectedLine);
+				return AssertionResult.Fail("Missing line", _expectedLine);
 
-			if (actualLine != _expectedLine)
-				throw new ScenarioAssertionException("Unexpected line", lineIndex, actualLine, _expectedLine);
-
-			return AssertionResult.MoveToNextAssertion;
+			return actualLine != _expectedLine
+				? AssertionResult.Fail("Unexpected line", _expectedLine)
+				: AssertionResult.Pass();
 		}
 	}
 }

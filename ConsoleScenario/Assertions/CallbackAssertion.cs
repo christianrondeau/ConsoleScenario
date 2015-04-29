@@ -12,15 +12,14 @@ namespace ConsoleScenario.Assertions
 			_callback = callback;
 		}
 
-		public AssertionResult Assert(int lineIndex, string actualLine)
+		public AssertionResult Assert(string actualLine)
 		{
 			if (actualLine == null)
-				throw new ScenarioAssertionException("Missing line", lineIndex, null, null);
+				return AssertionResult.Fail("Missing line");
 
-			if (!_callback(actualLine))
-				throw new ScenarioAssertionException("Unexpected line", lineIndex, actualLine, _callback.Method.Name);
-
-			return AssertionResult.MoveToNextAssertion;
+			return !_callback(actualLine)
+				? AssertionResult.Fail("Unexpected line", _callback.Method.Name)
+				: AssertionResult.Pass();
 		}
 	}
 }

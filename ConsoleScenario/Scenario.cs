@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using ConsoleScenario.Assertions;
 
 namespace ConsoleScenario
 {
@@ -81,13 +80,13 @@ namespace ConsoleScenario
 				var input = step.Input;
 				if (input != null)
 				{
-					asyncTwoWayStreamsHandler.WriteLine(input.Value);
+					asyncTwoWayStreamsHandler.WriteLine(input);
 					continue;
 				}
 
 				string actualLine;
+				var repeat = step.Repeat;
 				var assertion = step.Assertion;
-				AssertionResult assertionResult;
 
 				if (assertion == null)
 					throw new NotSupportedException("Only IInput and IAssertion are supported");
@@ -96,8 +95,11 @@ namespace ConsoleScenario
 				{
 					lineIndex++;
 					actualLine = ReadLineOrTimeout(lineIndex, asyncTwoWayStreamsHandler, step.Timeout);
-					assertionResult = assertion.Assert(lineIndex, actualLine);
-				} while (assertionResult == AssertionResult.KeepUsingSameAssertion && actualLine != null);
+					var assertionResult = assertion.Assert(actualLine);
+
+					if (!assertionResult.Success)
+						throw new ScenarioAssertionException(assertionResult.Message, lineIndex, actualLine, assertionResult.Expected);
+				} while (--repeat > 0 && actualLine != null);
 			}
 		}
 

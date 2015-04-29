@@ -2,21 +2,11 @@ namespace ConsoleScenario.Assertions
 {
 	public class AnyLineAssertion : IAssertion
 	{
-		private int _lineCount;
-
-		public AnyLineAssertion(int lineCount)
+		public AssertionResult Assert(string actualLine)
 		{
-			_lineCount = lineCount;
-		}
-
-		public AssertionResult Assert(int lineIndex, string actualLine)
-		{
-			if (actualLine == null)
-				throw new ScenarioAssertionException("Missing line", lineIndex, null, null);
-
-			return --_lineCount <= 0
-				? AssertionResult.MoveToNextAssertion
-				: AssertionResult.KeepUsingSameAssertion;
+			return actualLine == null
+				? AssertionResult.Fail("Missing line")
+				: AssertionResult.Pass();
 		}
 	}
 }

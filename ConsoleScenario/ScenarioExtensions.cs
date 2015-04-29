@@ -8,7 +8,7 @@ namespace ConsoleScenario
 	{
 		public static IScenario Input(this IScenario scenario, string value)
 		{
-			scenario.AddStep(new ScenarioStep(new InputLineAssertion(value)));
+			scenario.AddStep(new ScenarioStep(value));
 			return scenario;
 		}
 
@@ -38,13 +38,13 @@ namespace ConsoleScenario
 
 		public static IScenario Any(this IScenario scenario, int count, TimeSpan timeout)
 		{
-			scenario.AddStep(new ScenarioStep(new AnyLineAssertion(count)).WithTimeout(timeout));
+			scenario.AddStep(new ScenarioStep(new AnyLineAssertion()).Times(count).WithTimeout(timeout));
 			return scenario;
 		}
 
 		public static IScenario Any(this IScenario scenario, int count = 1)
 		{
-			scenario.AddStep(new ScenarioStep(new AnyLineAssertion(count)));
+			scenario.AddStep(new ScenarioStep(new AnyLineAssertion()).Times(count));
 			return scenario;
 		}
 
@@ -62,7 +62,7 @@ namespace ConsoleScenario
 
 		public static IScenario IgnoreRemaining(this IScenario scenario)
 		{
-			scenario.AddStep(new ScenarioStep(new IgnoreRemainingLinesAssertion()));
+			scenario.AddStep(new ScenarioStep(new IgnoreLineAssertion()).Times(Int32.MaxValue));
 			return scenario;
 		}
 	}

@@ -2,12 +2,11 @@ namespace ConsoleScenario.Assertions
 {
 	public class NoExtraneousLinesAssertion : IAssertion
 	{
-		public AssertionResult Assert(int lineIndex, string actualLine)
+		public AssertionResult Assert(string actualLine)
 		{
-			if (actualLine != null)
-				throw new ScenarioAssertionException("Extraneous line", lineIndex, actualLine, null);
-
-			return AssertionResult.KeepUsingSameAssertion;
+			return actualLine != null
+				? AssertionResult.Fail("Extraneous line")
+				: AssertionResult.Pass();
 		}
 	}
 }
