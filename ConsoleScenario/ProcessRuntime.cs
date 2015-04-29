@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 
 namespace ConsoleScenario
 {
@@ -57,8 +59,22 @@ namespace ConsoleScenario
 					: (int) ConsoleScenarioDefaults.Timeout.TotalSeconds))
 				return false;
 
-			_process.Kill();
-			return true;
+			List<Exception> exceptions = new List<Exception>();
+			for (var retry = 3; retry >= 0; retry--)
+			{
+				try
+				{
+					_process.Kill();
+					return true;
+				}
+				catch (Exception exc)
+				{
+					exceptions.Add(exc);
+					Thread.Sleep(100);
+				}
+			}
+
+			throw new AggregateException("Unable to close nor kill the process", exceptions);
 		}
 
 		public void Dispose()

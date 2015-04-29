@@ -15,7 +15,7 @@ namespace ConsoleScenario.Assertions
 		public AssertionResult Assert(string actualLine)
 		{
 			if (actualLine == null)
-				return AssertionResult.Fail("Missing line");
+				return AssertionResult.Fail("Missing line", _callback.Method.Name);
 
 			return !_callback(actualLine)
 				? AssertionResult.Fail("Unexpected line", _callback.Method.Name)

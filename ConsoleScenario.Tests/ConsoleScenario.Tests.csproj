@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Unit\Assertions\AnyLineAssertionTests.cs" />
     <Compile Include="Unit\Assertions\AssertionResultTests.cs" />
+    <Compile Include="Unit\Assertions\CallbackAssertionTests.cs" />
     <Compile Include="Unit\Assertions\IgnoreLineAssertionTests.cs" />
     <Compile Include="Unit\Assertions\NoExtraneousLinesAssertionTests.cs" />
     <Compile Include="Unit\AsyncDuplexStreamHandlerFactoryTests.cs" />

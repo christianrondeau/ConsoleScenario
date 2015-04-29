@@ -3,26 +3,26 @@ using NUnit.Framework;
 
 namespace ConsoleScenario.Tests.Unit.Assertions
 {
-	public class LineEqualsAssertionTests
+	public class CallbackAssertionTests
 	{
 		[Test]
-		public void EqualStringsPass()
+		public void ReturnTruePass()
 		{
 			Assert.That(
-				new LineEqualsAssertion("Expected").Assert("Expected").Success,
+				new CallbackAssertion(line => line == "Actual").Assert("Actual").Success,
 				Is.True);
 		}
 
 		[Test]
-		public void DifferentStringsFail()
+		public void ReturnFalseFail()
 		{
 			Assert.That(
-				new LineEqualsAssertion("Expected").Assert("Actual"),
+				new CallbackAssertion(line => false).Assert("Actual"),
 				Is.EqualTo(new AssertionResult
 				{
 					Success = false,
 					Message = "Unexpected line",
-					Expected = "Expected"
+					Expected = "<ReturnFalseFail>b__3"
 				}));
 		}
 
@@ -30,12 +30,12 @@ namespace ConsoleScenario.Tests.Unit.Assertions
 		public void NullFail()
 		{
 			Assert.That(
-				new LineEqualsAssertion("Expected").Assert(null),
+				new CallbackAssertion(line => true).Assert(null),
 				Is.EqualTo(new AssertionResult
 				{
 					Success = false,
 					Message = "Missing line",
-					Expected = "Expected"
+					Expected = "<NullFail>b__6"
 				}));
 		}
 	}

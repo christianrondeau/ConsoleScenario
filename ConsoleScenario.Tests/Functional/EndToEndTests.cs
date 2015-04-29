@@ -189,6 +189,22 @@ namespace ConsoleScenario.Tests.Functional
 						"<FailureBecauseCallbackReturnsFalse>b__11"
 						));
 			}
+
+			[Test]
+			public void FailureBecauseMissingLine()
+			{
+				ScenarioHelper.Do(() =>
+					GivenATestConsoleScenario(TestName)
+						.Any(3)
+						.Expect(line => true)
+						.Run(),
+					ScenarioHelper.Expect(
+						"Missing line",
+						4,
+						null,
+						"<FailureBecauseMissingLine>b__15"
+						));
+			}
 		}
 
 		public class InputTests
