@@ -8,61 +8,61 @@ namespace ConsoleScenario
 	{
 		public static IScenario Input(this IScenario scenario, string value)
 		{
-			scenario.AddAssertion(new InputLineAssertion(value));
+			scenario.AddStep(new ScenarioStep(new InputLineAssertion(value)));
 			return scenario;
 		}
 
 		public static IScenario Expect(this IScenario scenario, string line, TimeSpan timeout)
 		{
-			scenario.AddAssertion(new LineEqualsAssertion(line, timeout));
+			scenario.AddStep(new ScenarioStep(new LineEqualsAssertion(line)).WithTimeout(timeout));
 			return scenario;
 		}
 
 		public static IScenario Expect(this IScenario scenario, params string[] lines)
 		{
-			scenario.AddAssertions(lines.Select(LineEqualsAssertion.Create));
+			scenario.AddSteps(lines.Select(line => new ScenarioStep(new LineEqualsAssertion(line))));
 			return scenario;
 		}
 
 		public static IScenario Expect(this IScenario scenario, Func<string, bool> callback, TimeSpan timeout)
 		{
-			scenario.AddAssertion(new CallbackAssertion(callback, timeout));
+			scenario.AddStep(new ScenarioStep(new CallbackAssertion(callback)).WithTimeout(timeout));
 			return scenario;
 		}
 
 		public static IScenario Expect(this IScenario scenario, Func<string, bool> callback)
 		{
-			scenario.AddAssertion(new CallbackAssertion(callback));
+			scenario.AddStep(new ScenarioStep(new CallbackAssertion(callback)));
 			return scenario;
 		}
 
 		public static IScenario Any(this IScenario scenario, int count, TimeSpan timeout)
 		{
-			scenario.AddAssertion(new AnyLineAssertion(count, timeout));
+			scenario.AddStep(new ScenarioStep(new AnyLineAssertion(count)).WithTimeout(timeout));
 			return scenario;
 		}
 
 		public static IScenario Any(this IScenario scenario, int count = 1)
 		{
-			scenario.AddAssertion(new AnyLineAssertion(count));
+			scenario.AddStep(new ScenarioStep(new AnyLineAssertion(count)));
 			return scenario;
 		}
 
 		public static IScenario ExpectNothingElse(this IScenario scenario)
 		{
-			scenario.AddAssertion(new NoExtraneousLinesAssertion());
+			scenario.AddStep(new ScenarioStep(new NoExtraneousLinesAssertion()));
 			return scenario;
 		}
 
 		public static IScenario ExpectNothingElse(this IScenario scenario, TimeSpan timeout)
 		{
-			scenario.AddAssertion(new NoExtraneousLinesAssertion(timeout));
+			scenario.AddStep(new ScenarioStep(new NoExtraneousLinesAssertion()).WithTimeout(timeout));
 			return scenario;
 		}
 
 		public static IScenario IgnoreRemaining(this IScenario scenario)
 		{
-			scenario.AddAssertion(new IgnoreRemainingLinesAssertion());
+			scenario.AddStep(new ScenarioStep(new IgnoreRemainingLinesAssertion()));
 			return scenario;
 		}
 	}

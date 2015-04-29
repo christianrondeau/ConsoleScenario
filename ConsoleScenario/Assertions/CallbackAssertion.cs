@@ -2,18 +2,11 @@ using System;
 
 namespace ConsoleScenario.Assertions
 {
-	public class CallbackAssertion : AssertionBase, IAssertion
+	public class CallbackAssertion : IAssertion
 	{
 		private readonly Func<string, bool> _callback;
 
 		public CallbackAssertion(Func<string, bool> callback)
-		{
-			if (callback == null) throw new ArgumentNullException("callback");
-			_callback = callback;
-		}
-
-		public CallbackAssertion(Func<string, bool> callback, TimeSpan timeout)
-			: base(timeout)
 		{
 			if (callback == null) throw new ArgumentNullException("callback");
 			_callback = callback;

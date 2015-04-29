@@ -1,18 +1,7 @@
-using System;
-
 namespace ConsoleScenario.Assertions
 {
-	public class NoExtraneousLinesAssertion : AssertionBase, IAssertion
+	public class NoExtraneousLinesAssertion : IAssertion
 	{
-		public NoExtraneousLinesAssertion()
-		{
-		}
-
-		public NoExtraneousLinesAssertion(TimeSpan timeout)
-			: base(timeout)
-		{
-		}
-
 		public AssertionResult Assert(int lineIndex, string actualLine)
 		{
 			if (actualLine != null)

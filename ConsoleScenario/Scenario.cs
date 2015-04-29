@@ -7,8 +7,8 @@ namespace ConsoleScenario
 	public interface IScenario
 	{
 		void Run(TimeSpan? waitForExit = null);
-		void AddAssertion(IScenarioStep assertion);
-		void AddAssertions(IEnumerable<IScenarioStep> assertions);
+		void AddStep(IScenarioStep step);
+		void AddSteps(IEnumerable<IScenarioStep> steps);
 	}
 
 	public class Scenario : IScenario
@@ -28,12 +28,12 @@ namespace ConsoleScenario
 			_steps = new List<IScenarioStep>();
 		}
 
-		public void AddAssertion(IScenarioStep step)
+		public void AddStep(IScenarioStep step)
 		{
 			_steps.Add(step);
 		}
 
-		public void AddAssertions(IEnumerable<IScenarioStep> steps)
+		public void AddSteps(IEnumerable<IScenarioStep> steps)
 		{
 			_steps.AddRange(steps);
 		}
@@ -78,7 +78,7 @@ namespace ConsoleScenario
 				var step = stepsEnumerator.Current;
 				if (step == null) continue;
 
-				var input = step as IInput;
+				var input = step.Input;
 				if (input != null)
 				{
 					asyncTwoWayStreamsHandler.WriteLine(input.Value);
@@ -86,7 +86,7 @@ namespace ConsoleScenario
 				}
 
 				string actualLine;
-				var assertion = step as IAssertion;
+				var assertion = step.Assertion;
 				AssertionResult assertionResult;
 
 				if (assertion == null)
@@ -95,7 +95,7 @@ namespace ConsoleScenario
 				do
 				{
 					lineIndex++;
-					actualLine = ReadLineOrTimeout(lineIndex, asyncTwoWayStreamsHandler, assertion.Timeout);
+					actualLine = ReadLineOrTimeout(lineIndex, asyncTwoWayStreamsHandler, step.Timeout);
 					assertionResult = assertion.Assert(lineIndex, actualLine);
 				} while (assertionResult == AssertionResult.KeepUsingSameAssertion && actualLine != null);
 			}

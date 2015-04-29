@@ -1,18 +1,10 @@
-using System;
-
 namespace ConsoleScenario.Assertions
 {
-	public class AnyLineAssertion : AssertionBase, IAssertion
+	public class AnyLineAssertion : IAssertion
 	{
 		private int _lineCount;
 
 		public AnyLineAssertion(int lineCount)
-		{
-			_lineCount = lineCount;
-		}
-
-		public AnyLineAssertion(int lineCount, TimeSpan timeout)
-			: base(timeout)
 		{
 			_lineCount = lineCount;
 		}
