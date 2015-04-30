@@ -1,4 +1,4 @@
-namespace ConsoleScenario.Assertions
+namespace ConsoleScenario
 {
 	public class AssertionResult
 	{

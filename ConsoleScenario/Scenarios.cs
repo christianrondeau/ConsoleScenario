@@ -4,7 +4,10 @@ namespace ConsoleScenario
 	{
 		public static IScenario Create(string appPath, string args)
 		{
-			return new Scenario(new ProcessFactory(appPath, args), new AsyncDuplexStreamHandlerFactory());
+			return new Scenario(
+				new ProcessRuntimeFactory(appPath, args),
+				new AsyncDuplexStreamHandlerFactory()
+				);
 		}
 	}
 }

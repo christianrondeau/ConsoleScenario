@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace ConsoleScenario.TestApp
 {
@@ -8,7 +9,17 @@ namespace ConsoleScenario.TestApp
 		{
 			var testName = args.FirstOrDefault();
 
-			new TestRunner(Tests.All()).Run(testName);
+			var tests = Tests.All();
+
+			if (testName == null)
+			{
+				Console.WriteLine("Syntax: ConsoleScenario.TestApp.exe [test-name]");
+				foreach (var test in tests.Keys)
+					Console.WriteLine("  " + test);
+				return;
+			}
+
+			new TestRunner(tests).Run(testName);
 		}
 	}
 }

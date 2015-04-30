@@ -39,8 +39,8 @@ namespace ConsoleScenario.Tests.Unit
 
 			var handler = new AsyncDuplexStreamHandler(sr, sw);
 
-			Assert.That(handler.ReadLine(0), Is.EqualTo("Line 1"));
-			Assert.That(handler.ReadLine(0), Is.EqualTo("Line 2"));
+			Assert.That(handler.ReadLine(TimeSpan.Zero), Is.EqualTo("Line 1"));
+			Assert.That(handler.ReadLine(TimeSpan.Zero), Is.EqualTo("Line 2"));
 		}
 
 		[Test]
@@ -53,7 +53,7 @@ namespace ConsoleScenario.Tests.Unit
 
 			var handler = new AsyncDuplexStreamHandler(sr, sw);
 
-			handler.ReadLine(0.1);
+			handler.ReadLine(TimeSpan.FromMilliseconds(100));
 		}
 
 		[Test]
@@ -64,8 +64,8 @@ namespace ConsoleScenario.Tests.Unit
 
 			var handler = new AsyncDuplexStreamHandler(sr, sw);
 
-			handler.ReadLine(0.1);
-			Assert.That(handler.ReadLine(0.1), Is.Null);
+			handler.ReadLine(TimeSpan.FromMilliseconds(100));
+			Assert.That(handler.ReadLine(TimeSpan.FromMilliseconds(100)), Is.Null);
 		}
 
 		[Test]

@@ -229,12 +229,11 @@ namespace ConsoleScenario.Tests.Functional
 			[Test]
 			public void FailureBecauseConsoleDidNotRespond()
 			{
-
 				ScenarioHelper.Do(() =>
 					GivenATestConsoleScenario(TestName)
 						.Expect("Waiting for 2 seconds...")
 						.Expect("This line will never come.", TimeSpan.FromSeconds(0.5))
-						.Run(),
+						.Run(TimeSpan.FromSeconds(0.5)),
 					ScenarioHelper.Expect(
 						"Timeout",
 						2,

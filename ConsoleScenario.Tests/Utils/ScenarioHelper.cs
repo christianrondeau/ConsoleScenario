@@ -18,7 +18,8 @@ namespace ConsoleScenario.Tests.Utils
 				var actualExceptionType = exc.GetType();
 
 				if (actualExceptionType != expectedExceptionType)
-					Assert.Fail("An exception of type {0} was expected, but an exception of type {1} was thrown with message: {2}", expectedExceptionType.Name, actualExceptionType.Name, exc.Message);
+					throw;
+					//Assert.Fail("An exception of type {0} was expected, but an exception of type {1} was thrown with message: {2}", expectedExceptionType.Name, actualExceptionType.Name, exc.Message);
 
 				assert((T)exc);
 			}

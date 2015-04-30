@@ -21,7 +21,7 @@ namespace ConsoleScenario
 
 	public interface IAsyncDuplexStreamHandler : IDisposable
 	{
-		string ReadLine(double timeoutInSeconds);
+		string ReadLine(TimeSpan timeout);
 		void WriteLine(string command);
 		void WaitForExit();
 	}
@@ -42,26 +42,20 @@ namespace ConsoleScenario
 			_task.Start();
 		}
 
-		public string ReadLine(double timeoutInSeconds)
+		public string ReadLine(TimeSpan timeout)
 		{
 			string line;
-			if (timeoutInSeconds > 0)
-			{
-				var timeout = TimeSpan.FromSeconds(timeoutInSeconds);
-				if (!_pendingOutputLines.TryTake(out line, timeout))
-				{
-					if (_pendingOutputLines.IsAddingCompleted)
-						return null;
+			
+			if (timeout == TimeSpan.Zero)
+				timeout = TimeSpan.FromDays(7);
 
-					throw new TimeoutException(string.Format(@"No result in alloted time: {0:ss\.ffff}s", timeout));
-				}
-			}
-			else
-			{
-				line = _pendingOutputLines.Take();
-			}
+			if (_pendingOutputLines.TryTake(out line, timeout))
+				return line;
 
-			return line;
+			if (_pendingOutputLines.IsAddingCompleted)
+				return null;
+
+			throw new TimeoutException(string.Format(@"No result in alloted time: {0:ss\.ffff}s", timeout));
 		}
 
 		public void WriteLine(string command)
@@ -91,7 +85,7 @@ namespace ConsoleScenario
 			}
 
 #if(DEBUG)
-			Debug.WriteLine("DEBUG: >> Console Exit");
+			Debug.WriteLine("DEBUG: >> Out stream closed");
 #endif
 			_pendingOutputLines.CompleteAdding();
 		}

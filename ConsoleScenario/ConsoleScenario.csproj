@@ -40,13 +40,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assertions\AnyLineAssertion.cs" />
-    <Compile Include="Assertions\AssertionResult.cs" />
+    <Compile Include="AssertionResult.cs" />
     <Compile Include="Assertions\CallbackAssertion.cs" />
     <Compile Include="Assertions\IgnoreLineAssertion.cs" />
     <Compile Include="Assertions\NoExtraneousLinesAssertion.cs" />
-    <Compile Include="ScenarioStep.cs" />
-    <Compile Include="ConsoleScenarioDefaults.cs" />
-    <Compile Include="Assertions\IAssertion.cs" />
+    <Compile Include="IScenarioStep.cs" />
+    <Compile Include="ProcessFactory.cs" />
+    <Compile Include="Steps\ReadStep.cs" />
+    <Compile Include="Steps\InputStep.cs" />
+    <Compile Include="IAssertion.cs" />
     <Compile Include="AsyncDuplexStreamHandler.cs" />
     <Compile Include="Assertions\LineEqualsAssertion.cs" />
     <Compile Include="ProcessRuntime.cs" />

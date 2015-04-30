@@ -6,8 +6,19 @@ using System.Threading;
 
 namespace ConsoleScenario
 {
+	public interface IProcessRuntime : IDisposable
+	{
+		TextReader StandardOutput { get; }
+		TextWriter StandardInput { get; }
+		bool ForceExit(TimeSpan? waitForExit);
+	}
+
 	public class ProcessRuntime : IProcessRuntime
 	{
+		private const int ForceExitRetries = 3;
+		private const int SleepBetweenRetriesMilliseconds = 100;
+		private const int DefaultWaitForExitMilliseconds = 1000;
+
 		public static ProcessRuntime Start(string appPath, string args)
 		{
 			return new ProcessRuntime(new Process
@@ -51,17 +62,31 @@ namespace ConsoleScenario
 		{
 			if (_process.HasExited) return false;
 
-			_process.CloseMainWindow();
+			try
+			{
+				_process.CloseMainWindow();
+			}
+			catch (InvalidOperationException)
+			{
+#if(DEBUG)
+				Debug.WriteLine("DEBUG: CloseMainWindow failed on SUT process");
+#endif
+				if (_process.HasExited) return false;
+			}
 
-			if (_process.WaitForExit(
-				waitForExit.HasValue
-					? (int) waitForExit.Value.TotalMilliseconds
-					: (int) ConsoleScenarioDefaults.Timeout.TotalSeconds))
+			if (_process.WaitForExit(waitForExit.HasValue ? (int) waitForExit.Value.TotalMilliseconds : DefaultWaitForExitMilliseconds))
 				return false;
 
-			List<Exception> exceptions = new List<Exception>();
-			for (var retry = 3; retry >= 0; retry--)
+#if(DEBUG)
+			Debug.WriteLine("DEBUG: WaitForExit failed on SUT process; Killing process");
+#endif
+
+			var exceptions = new List<Exception>();
+			for (var retry = 0; retry < ForceExitRetries; retry++)
 			{
+				if (retry != 0)
+					Thread.Sleep(SleepBetweenRetriesMilliseconds);
+
 				try
 				{
 					_process.Kill();
@@ -70,7 +95,6 @@ namespace ConsoleScenario
 				catch (Exception exc)
 				{
 					exceptions.Add(exc);
-					Thread.Sleep(100);
 				}
 			}
 
@@ -81,37 +105,5 @@ namespace ConsoleScenario
 		{
 			_process.Dispose();
 		}
-	}
-
-	public interface IProcessRuntime : IDisposable
-	{
-		TextReader StandardOutput { get; }
-		TextWriter StandardInput { get; }
-		bool ForceExit(TimeSpan? waitForExit);
-	}
-
-	public class ProcessFactory : IProcessFactory
-	{
-		private readonly string _appPath;
-		private readonly string _args;
-
-		public ProcessFactory(string appPath, string args)
-		{
-			if (appPath == null) throw new ArgumentNullException("appPath");
-			if (args == null) throw new ArgumentNullException("args");
-
-			_appPath = appPath;
-			_args = args;
-		}
-
-		public IProcessRuntime Start()
-		{
-			return ProcessRuntime.Start(_appPath, _args);
-		}
-	}
-
-	public interface IProcessFactory
-	{
-		IProcessRuntime Start();
 	}
 }

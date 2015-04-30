@@ -33,10 +33,10 @@ Here is an overview of the main features that should be implemented
 
 ### Other TODOs
 
-- [ ] Refactor to avoid having two constructors for every `ScenarioExtensions` entry
-- [ ] Refactor the `Scenario.AddStep` and instead use `AddAssertion` and `AddInput`
-- [ ] Move IInput out of the Assertions folder
-- [ ] Refactor the multi-line and single-line assertions to avoid duplication (e.g. `scenario.Any().Times(5)` where `.Times`, would simply wrap the assertion in a repeater. `.Once` would do nothing (readability) and `Until` would allow using any assertion)
+- [X] Refactor to avoid having two constructors for every `ScenarioExtensions` entry
+- [-] Refactor the `Scenario.AddStep` and instead use `AddAssertion` and `AddInput`
+- [X] Move IInput out of the Assertions folder
+- [X] Refactor the multi-line and single-line assertions to avoid duplication (e.g. `scenario.Any().Times(5)` where `.Times`, would simply wrap the assertion in a repeater. `.Once` would do nothing (readability) and `Until` would allow using any assertion)
 - [ ] To allow `Until`, split the assertion "container" and the assertion code itself
 
 ## Example
