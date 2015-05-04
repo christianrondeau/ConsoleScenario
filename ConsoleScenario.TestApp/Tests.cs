@@ -14,7 +14,8 @@ namespace ConsoleScenario.TestApp
 				{"two-lines", TwoLines},
 				{"three-lines", ThreeLines},
 				{"timeout", Timeout},
-				{"print-input", PrintInput}
+				{"print-input", PrintInput},
+				{"count-to-ten", CountToTen}
 			};
 		}
 
@@ -48,6 +49,12 @@ namespace ConsoleScenario.TestApp
 			Console.WriteLine("Enter a value:");
 			var value = Console.ReadLine();
 			Console.WriteLine("You have entered: " + value);
+		}
+
+		public static void CountToTen()
+		{
+			for (var i = 1; i <= 10; i++)
+				Console.WriteLine(i);
 		}
 	}
 }

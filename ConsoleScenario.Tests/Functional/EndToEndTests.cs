@@ -99,7 +99,7 @@ namespace ConsoleScenario.Tests.Functional
 						"Extraneous line",
 						2,
 						"Line 2",
-						null
+						(string)null
 						));
 			}
 
@@ -156,7 +156,36 @@ namespace ConsoleScenario.Tests.Functional
 						"Missing line",
 						4,
 						null,
-						null
+						(string)null
+						));
+			}
+		}
+
+		public class UntilTests
+		{
+			private const string TestName = "count-to-ten";
+
+			[Test]
+			public void SuccessWithUntilAndExpect()
+			{
+				GivenATestConsoleScenario(TestName)
+					.Until(line => line == "9")
+					.Expect("10")
+					.Run();
+			}
+
+			[Test]
+			public void FailureBecauseUntilNeverComes()
+			{
+				ScenarioHelper.Do(() =>
+					GivenATestConsoleScenario(TestName)
+						.Until(line => line == "this will never be true")
+						.Run(),
+					ScenarioHelper.Expect(
+						"Until was never true",
+						11,
+						null,
+						(string)null
 						));
 			}
 		}
@@ -186,7 +215,7 @@ namespace ConsoleScenario.Tests.Functional
 						"Unexpected line",
 						1,
 						"This is the first line.",
-						"<FailureBecauseCallbackReturnsFalse>b__11"
+						expected => expected.StartsWith("<FailureBecauseCallbackReturnsFalse>")
 						));
 			}
 
@@ -202,7 +231,7 @@ namespace ConsoleScenario.Tests.Functional
 						"Missing line",
 						4,
 						null,
-						"<FailureBecauseMissingLine>b__15"
+						expected => expected.StartsWith("<FailureBecauseMissingLine>")
 						));
 			}
 		}
@@ -238,7 +267,7 @@ namespace ConsoleScenario.Tests.Functional
 						"Timeout",
 						2,
 						null,
-						null
+						(string)null
 						));
 			}
 
@@ -256,7 +285,7 @@ namespace ConsoleScenario.Tests.Functional
 						"Process wait for exit timeout",
 						2,
 						null,
-						null
+						(string)null
 						));
 
 				stopwatch.Stop();

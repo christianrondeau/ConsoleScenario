@@ -20,7 +20,7 @@ Here is an overview of the main features that should be implemented
 - [X] Ability to expect any line(s) of text of console output
 - [ ] Ability to provide a regex instead of a string
 - [X] Ability to assert a line using a callback
-- [ ] Ability to specify "until", e.g. "until a line contains 'COMPLETE'"
+- [X] Ability to specify "until", e.g. "until a line contains 'COMPLETE'"
 - [ ] Ability to input something in the console when there is a prompt
 - [ ] Ability to wait until a specific line using a callback (especially for Any)
 - [ ] Ability to read a line of console output and place it in a variable, and then use it in later expects (e.g. as a callback per line)
@@ -37,7 +37,7 @@ Here is an overview of the main features that should be implemented
 - [-] Refactor the `Scenario.AddStep` and instead use `AddAssertion` and `AddInput`
 - [X] Move IInput out of the Assertions folder
 - [X] Refactor the multi-line and single-line assertions to avoid duplication (e.g. `scenario.Any().Times(5)` where `.Times`, would simply wrap the assertion in a repeater. `.Once` would do nothing (readability) and `Until` would allow using any assertion)
-- [ ] To allow `Until`, split the assertion "container" and the assertion code itself
+- [X] To allow `Until`, split the assertion "container" and the assertion code itself
 
 ## Example
 
@@ -48,6 +48,7 @@ Scenarios.Create("myapp.exe", "-argument")
     "That you expect"
   )
   .Expect("You can specify a timeout per line", TimeSpan.FromSeconds(0.5))
+  .Until(line => line.Contains("Wait for some expected string"))
   .Expect(line => line.Contains("You can also specify callbacks"))
   .Any(3) // Or just skip a few lines
   .Input("You can input something too!")

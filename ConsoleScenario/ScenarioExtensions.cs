@@ -66,5 +66,11 @@ namespace ConsoleScenario
 			scenario.AddStep(new ReadStep(new IgnoreLineAssertion()).Times(Int32.MaxValue));
 			return scenario;
 		}
+
+		public static IScenario Until(this IScenario scenario, Func<string, bool> condition)
+		{
+			scenario.AddStep(new ReadUntilStep(condition));
+			return scenario;
+		}
 	}
 }

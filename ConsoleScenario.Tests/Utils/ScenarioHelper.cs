@@ -35,5 +35,16 @@ namespace ConsoleScenario.Tests.Utils
 				Assert.That(exc.Expected, Is.EqualTo(expected));
 			};
 		}
+
+		public static Action<ScenarioAssertionException> Expect(string description, int lineNumber, string actual, Func<string, bool> assertExpected)
+		{
+			return delegate(ScenarioAssertionException exc)
+			{
+				Assert.That(exc.Description, Is.EqualTo(description));
+				Assert.That(exc.LineIndex, Is.EqualTo(lineNumber - 1), "Line Index should be the Line Number - 1");
+				Assert.That(exc.Actual, Is.EqualTo(actual));
+				Assert.That(assertExpected(exc.Expected), Is.True);
+			};
+		}
 	}
 }
