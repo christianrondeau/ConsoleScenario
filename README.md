@@ -18,17 +18,17 @@ Here is an overview of the main features that should be implemented
 - [X] Kill the console if the test times out and the console does not close itself
 - [X] Ability to input something in the console
 - [X] Ability to expect any line(s) of text of console output
-- [ ] Ability to provide a regex instead of a string
+- [-] Ability to provide a regex instead of a string
 - [X] Ability to assert a line using a callback
 - [X] Ability to specify "until", e.g. "until a line contains 'COMPLETE'"
 - [ ] Ability to input something in the console when there is a prompt
-- [ ] Ability to wait until a specific line using a callback (especially for Any)
+- [X] Ability to wait until a specific line using a callback (especially for Any)
 - [ ] Ability to read a line of console output and place it in a variable, and then use it in later expects (e.g. as a callback per line)
 - [ ] Ability to private custom line assertion callbacks
-- [ ] Ensure Process is stopped if an assertion error is thrown, or if the Scenario is disposed
+- [X] Ensure Process is stopped if an assertion error is thrown, or if the Scenario is disposed
 - [ ] Handle console errors and forward them as assertion failed
 - [ ] Expect console errors
-- [ ] Input and output characters instead of lines
+- [?] Input and output characters instead of lines
 - [ ] Nice documentation
 
 ### Other TODOs

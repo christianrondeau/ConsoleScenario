@@ -46,7 +46,7 @@
     <Compile Include="Assertions\NoExtraneousLinesAssertion.cs" />
     <Compile Include="IScenarioStep.cs" />
     <Compile Include="ProcessFactory.cs" />
-    <Compile Include="Steps\ReadStep.cs" />
+    <Compile Include="Steps\ReadAssertionStep.cs" />
     <Compile Include="Steps\InputStep.cs" />
     <Compile Include="IAssertion.cs" />
     <Compile Include="AsyncDuplexStreamHandler.cs" />
@@ -57,6 +57,8 @@
     <Compile Include="ScenarioAssertionException.cs" />
     <Compile Include="ScenarioExtensions.cs" />
     <Compile Include="Scenarios.cs" />
+    <Compile Include="Steps\ReadStepBase.cs" />
+    <Compile Include="Steps\ReadUntilStep.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
