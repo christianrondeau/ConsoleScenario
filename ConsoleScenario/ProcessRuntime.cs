@@ -13,7 +13,7 @@ namespace ConsoleScenario
 		bool ForceExit(TimeSpan? waitForExit);
 	}
 
-	public class ProcessRuntime : IProcessRuntime
+	public sealed class ProcessRuntime : IProcessRuntime
 	{
 		private const int ForceExitRetries = 3;
 		private const int SleepBetweenRetriesMilliseconds = 100;

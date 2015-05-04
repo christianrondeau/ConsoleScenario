@@ -2,6 +2,7 @@ using System;
 
 namespace ConsoleScenario
 {
+	[Serializable]
 	public class ScenarioAssertionException : Exception
 	{
 		private readonly string _description;

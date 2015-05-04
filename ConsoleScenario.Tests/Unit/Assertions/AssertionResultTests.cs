@@ -1,4 +1,3 @@
-using ConsoleScenario.Assertions;
 using NUnit.Framework;
 
 namespace ConsoleScenario.Tests.Unit.Assertions

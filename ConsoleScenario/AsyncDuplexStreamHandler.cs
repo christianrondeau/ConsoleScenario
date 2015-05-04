@@ -26,7 +26,7 @@ namespace ConsoleScenario
 		void WaitForExit();
 	}
 
-	public class AsyncDuplexStreamHandler : IAsyncDuplexStreamHandler
+	public sealed class AsyncDuplexStreamHandler : IAsyncDuplexStreamHandler
 	{
 		private readonly TextWriter _input;
 		private readonly TextReader _output;
@@ -71,6 +71,7 @@ namespace ConsoleScenario
 		public void Dispose()
 		{
 			if (_task != null) _task.Dispose();
+			if(_pendingOutputLines != null) _pendingOutputLines.Dispose();
 		}
 
 		private void ReadLinesAsync()
