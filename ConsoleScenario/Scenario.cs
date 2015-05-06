@@ -45,12 +45,12 @@ namespace ConsoleScenario
 				Exception exception = null;
 				try
 				{
-					var asyncTwoWayStreamsHandler = _asyncDuplexStreamHandlerFactory.Create(
+					var asyncDuplexStreamHandler = _asyncDuplexStreamHandlerFactory.Create(
 											process.StandardOutput,
 											process.StandardInput
 											);
 
-					RunSteps(asyncTwoWayStreamsHandler, ref lineIndex);
+					RunSteps(asyncDuplexStreamHandler, ref lineIndex);
 				}
 				catch (Exception exc)
 				{
@@ -68,7 +68,7 @@ namespace ConsoleScenario
 			}
 		}
 
-		private void RunSteps(IAsyncDuplexStreamHandler asyncTwoWayStreamsHandler, ref int lineIndex)
+		private void RunSteps(IAsyncDuplexStreamHandler asyncDuplexStreamHandler, ref int lineIndex)
 		{
 			var stepsEnumerator = _steps.GetEnumerator();
 
@@ -77,7 +77,7 @@ namespace ConsoleScenario
 				var step = stepsEnumerator.Current;
 				if (step == null) continue;
 
-				step.Run(asyncTwoWayStreamsHandler, ref lineIndex);
+				step.Run(asyncDuplexStreamHandler, ref lineIndex);
 			}
 		}
 	}

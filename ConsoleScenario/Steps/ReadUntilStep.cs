@@ -23,14 +23,14 @@ namespace ConsoleScenario.Steps
 			_condition = condition;
 		}
 
-		public void Run(IAsyncDuplexStreamHandler asyncTwoWayStreamsHandler, ref int lineIndex)
+		public void Run(IAsyncDuplexStreamHandler asyncDuplexStreamHandler, ref int lineIndex)
 		{
 			string actualLine;
 
 			do
 			{
 				lineIndex++;
-				actualLine = ReadLineOrTimeout(lineIndex, asyncTwoWayStreamsHandler);
+				actualLine = ReadLineOrTimeout(lineIndex, asyncDuplexStreamHandler);
 
 				if (_condition(actualLine))
 					return;

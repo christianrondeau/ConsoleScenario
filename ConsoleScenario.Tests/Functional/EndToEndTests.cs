@@ -238,16 +238,59 @@ namespace ConsoleScenario.Tests.Functional
 
 		public class InputTests
 		{
-			private const string TestName = "print-input";
-
 			[Test]
 			public void SuccessWithInputValue()
 			{
-				GivenATestConsoleScenario(TestName)
+				GivenATestConsoleScenario("print-input")
 					.Expect("Enter a value:")
 					.Input("my text")
 					.Expect("You have entered: my text")
 					.Run();
+			}
+		}
+
+		public class InputWithPromptTests
+		{
+			[Test]
+			public void SuccessWithInputValueInPromptWithText()
+			{
+				GivenATestConsoleScenario("yes-no")
+					.ExpectPrompt("Do you want to continue? (y/n): ")
+					.Input("y")
+					.Expect("You have entered yes")
+					.Run();
+			}
+
+			[Test]
+			public void FailureBecauseEndOfStream()
+			{
+				ScenarioHelper.Do(() =>
+					GivenATestConsoleScenario("one-line")
+						.Any()
+						.ExpectPrompt("Expected")
+						.Run(),
+					ScenarioHelper.Expect(
+						"Unexpected end of stream",
+						1,
+						null,
+						"Expected"
+						));
+			}
+
+			[Test]
+			public void FailureBecauseEndOfLine()
+			{
+				ScenarioHelper.Do(() =>
+					GivenATestConsoleScenario("two-lines")
+						.Any()
+						.ExpectPrompt("Expected")
+						.Run(),
+					ScenarioHelper.Expect(
+						"Unexpected end of line",
+						1,
+						null,
+						"Expected"
+						));
 			}
 		}
 

@@ -15,7 +15,8 @@ namespace ConsoleScenario.TestApp
 				{"three-lines", ThreeLines},
 				{"timeout", Timeout},
 				{"print-input", PrintInput},
-				{"count-to-ten", CountToTen}
+				{"count-to-ten", CountToTen},
+				{"yes-no", YesNo}
 			};
 		}
 
@@ -55,6 +56,13 @@ namespace ConsoleScenario.TestApp
 		{
 			for (var i = 1; i <= 10; i++)
 				Console.WriteLine(i);
+		}
+
+		public static void YesNo()
+		{
+			Console.Write("Do you want to continue? (y/n): ");
+			var value = Console.ReadLine();
+			Console.WriteLine(string.Format("You have selected {0}", value) == "y" ? "yes" : "no");
 		}
 	}
 }

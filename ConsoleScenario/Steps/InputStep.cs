@@ -17,9 +17,9 @@ namespace ConsoleScenario.Steps
 			Input = input;
 		}
 
-		public void Run(IAsyncDuplexStreamHandler asyncTwoWayStreamsHandler, ref int lineIndex)
+		public void Run(IAsyncDuplexStreamHandler asyncDuplexStreamHandler, ref int lineIndex)
 		{
-			asyncTwoWayStreamsHandler.WriteLine(Input);
+			asyncDuplexStreamHandler.WriteLine(Input);
 		}
 	}
 }

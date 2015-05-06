@@ -46,7 +46,8 @@
     <Compile Include="Assertions\NoExtraneousLinesAssertion.cs" />
     <Compile Include="IScenarioStep.cs" />
     <Compile Include="ProcessFactory.cs" />
-    <Compile Include="Steps\ReadAssertionStep.cs" />
+    <Compile Include="Steps\ReadCharsStep.cs" />
+    <Compile Include="Steps\ReadLineAssertionStep.cs" />
     <Compile Include="Steps\InputStep.cs" />
     <Compile Include="IAssertion.cs" />
     <Compile Include="AsyncDuplexStreamHandler.cs" />

@@ -21,6 +21,7 @@ namespace ConsoleScenario
 
 	public interface IAsyncDuplexStreamHandler : IDisposable
 	{
+		char ReadChar(TimeSpan timeout);
 		string ReadLine(TimeSpan timeout);
 		void WriteLine(string command);
 		void WaitForExit();
@@ -28,6 +29,8 @@ namespace ConsoleScenario
 
 	public sealed class AsyncDuplexStreamHandler : IAsyncDuplexStreamHandler
 	{
+		private static readonly TimeSpan VeryLongTimeout = TimeSpan.FromDays(7);
+
 		private readonly TextWriter _input;
 		private readonly TextReader _output;
 		private readonly Task _task;
@@ -42,12 +45,17 @@ namespace ConsoleScenario
 			_task.Start();
 		}
 
+		public char ReadChar(TimeSpan timeout)
+		{
+			return char.MinValue;
+		}
+
 		public string ReadLine(TimeSpan timeout)
 		{
 			string line;
 			
 			if (timeout == TimeSpan.Zero)
-				timeout = TimeSpan.FromDays(7);
+				timeout = VeryLongTimeout;
 
 			if (_pendingOutputLines.TryTake(out line, timeout))
 				return line;

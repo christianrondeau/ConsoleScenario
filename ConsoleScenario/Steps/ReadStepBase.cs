@@ -6,11 +6,11 @@ namespace ConsoleScenario.Steps
 	{
 		public TimeSpan Timeout { get; protected set; }
 
-		protected string ReadLineOrTimeout(int lineIndex, IAsyncDuplexStreamHandler asyncTwoWayStreamsHandler)
+		protected string ReadLineOrTimeout(int lineIndex, IAsyncDuplexStreamHandler asyncDuplexStreamHandler)
 		{
 			try
 			{
-				return asyncTwoWayStreamsHandler.ReadLine(Timeout);
+				return asyncDuplexStreamHandler.ReadLine(Timeout);
 			}
 			catch (TimeoutException exc)
 			{

@@ -8,7 +8,7 @@ namespace ConsoleScenario.Steps
 		IReadAssertionStep Times(int times);
 	}
 
-	public class ReadAssertionAssertionStep : ReadStepBase, IReadAssertionStep
+	public class ReadLineAssertionStep : ReadStepBase, IReadAssertionStep
 	{
 		public IAssertion Assertion { get; private set; }
 		public int Repeat { get; private set; }
@@ -25,14 +25,14 @@ namespace ConsoleScenario.Steps
 			return this;
 		}
 
-		public ReadAssertionAssertionStep(IAssertion assertion)
+		public ReadLineAssertionStep(IAssertion assertion)
 		{
 			if (assertion == null) throw new ArgumentNullException("assertion");
 
 			Assertion = assertion;
 		}
 
-		public void Run(IAsyncDuplexStreamHandler asyncTwoWayStreamsHandler, ref int lineIndex)
+		public void Run(IAsyncDuplexStreamHandler asyncDuplexStreamHandler, ref int lineIndex)
 		{
 			var repeat = Repeat;
 			string actualLine;
@@ -40,7 +40,7 @@ namespace ConsoleScenario.Steps
 			do
 			{
 				lineIndex++;
-				actualLine = ReadLineOrTimeout(lineIndex, asyncTwoWayStreamsHandler);
+				actualLine = ReadLineOrTimeout(lineIndex, asyncDuplexStreamHandler);
 				var assertionResult = Assertion.Assert(actualLine);
 
 				if (!assertionResult.Success)
