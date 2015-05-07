@@ -45,6 +45,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Functional\AnyTests.cs" />
+    <Compile Include="Functional\CallbackTests.cs" />
+    <Compile Include="Functional\InputTests.cs" />
+    <Compile Include="Functional\InputWithPromptTests.cs" />
+    <Compile Include="Functional\MultiLinesTests.cs" />
+    <Compile Include="Functional\OneLineTests.cs" />
+    <Compile Include="Functional\TimeoutTests.cs" />
+    <Compile Include="Functional\UntilTests.cs" />
     <Compile Include="Unit\Assertions\AnyLineAssertionTests.cs" />
     <Compile Include="Unit\Assertions\AssertionResultTests.cs" />
     <Compile Include="Unit\Assertions\CallbackAssertionTests.cs" />
@@ -54,9 +62,10 @@
     <Compile Include="Unit\AsyncDuplexStreamHandlerTests.cs" />
     <Compile Include="Unit\Assertions\LineEqualsAssertionTests.cs" />
     <Compile Include="Utils\BlockingStream.cs" />
+    <Compile Include="Utils\EchoStream.cs" />
     <Compile Include="Utils\ScenarioHelper.cs" />
     <Compile Include="Unit\ScenarioAssertionExceptionTests.cs" />
-    <Compile Include="Functional\EndToEndTests.cs" />
+    <Compile Include="Functional\EndToEndTestsBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

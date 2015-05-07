@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ConsoleScenario
@@ -34,15 +35,20 @@ namespace ConsoleScenario
 
 		private readonly TextWriter _input;
 		private readonly TextReader _output;
+		private readonly CancellationTokenSource _cancel;
 		private readonly Task _task;
-		private readonly BlockingCollection<char> _pendingChars = new BlockingCollection<char>();
+		private readonly BlockingCollection<char> _pendingChars;
 
 		public AsyncDuplexStreamHandler(TextReader output, TextWriter input)
 		{
 			_input = input;
 			_output = output;
 
-			_task = new Task(ReadLinesAsync);
+			_pendingChars = new BlockingCollection<char>();
+
+			_cancel = new CancellationTokenSource();
+
+			_task = new Task(ReadLinesAsync, _cancel.Token);
 			_task.Start();
 		}
 
@@ -90,6 +96,7 @@ namespace ConsoleScenario
 		{
 			foreach (var c in command)
 				_pendingChars.Add(c);
+
 			_pendingChars.Add('\n');
 
 			_input.WriteLine(command);
@@ -102,8 +109,17 @@ namespace ConsoleScenario
 
 		public void Dispose()
 		{
-			if (_task != null) _task.Dispose();
-			if (_pendingChars != null) _pendingChars.Dispose();
+			if (_task != null)
+			{
+				_cancel.Cancel();
+				_task.Wait();
+				_task.Dispose();
+			}
+
+			if (_pendingChars != null)
+			{
+				_pendingChars.Dispose();
+			}
 		}
 
 		private void ReadLinesAsync()
@@ -114,6 +130,12 @@ namespace ConsoleScenario
 			int nextChar;
 			while ((nextChar = _output.Read()) != -1)
 			{
+				if (_cancel.IsCancellationRequested)
+				{
+					_pendingChars.CompleteAdding();
+					return;
+				}
+
 				var value = (char) nextChar;
 
 				if (nextChar == '\r')

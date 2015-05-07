@@ -9,26 +9,81 @@ using NUnit.Framework;
 
 namespace ConsoleScenario.Tests.Unit
 {
-	[TestFixture]
 	public class AsyncDuplexStreamHandlerTests
 	{
-		[Test]
-		public void CanWrite()
+		public class CanWriteAndReadChars
 		{
-			var sr = new StreamReader(new MemoryStream());
-			var sb = new StringBuilder();
-			var sw = new StringWriter(sb);
+			private StringBuilder _sb;
+			private AsyncDuplexStreamHandler _handler;
 
-			var handler = new AsyncDuplexStreamHandler(sr, sw);
+			[SetUp]
+			public void WhenWritingChars()
+			{
+				var es = new EchoStream();
+				var sr = new StreamReader(es);
+				_sb = new StringBuilder();
+				var sw = new StringWriter(_sb);
+				_handler = new AsyncDuplexStreamHandler(sr, sw);
 
-			handler.WriteLine("Should end up in the StreamWriter");
-			handler.WriteLine("With a line break after each");
+				_handler.Write("123");
+				_handler.Write("456");
+			}
 
-			Assert.That(sb.ToString(), Is.EqualTo("Should end up in the StreamWriter" + Environment.NewLine + "With a line break after each" + Environment.NewLine));
+			[Test]
+			public void CharsAreWrittenToInput()
+			{
+				Assert.That(_sb.ToString(), Is.EqualTo("123456"));
+			}
+
+			[Test]
+			public void CharsAreWrittenToOutput()
+			{
+				var timeout = TimeSpan.FromMilliseconds(1);
+				Assert.That(_handler.Read(timeout), Is.EqualTo('1'));
+				Assert.That(_handler.Read(timeout), Is.EqualTo('2'));
+				Assert.That(_handler.Read(timeout), Is.EqualTo('3'));
+				Assert.That(_handler.Read(timeout), Is.EqualTo('4'));
+				Assert.That(_handler.Read(timeout), Is.EqualTo('5'));
+				Assert.That(_handler.Read(timeout), Is.EqualTo('6'));
+			}
+		}
+
+		public class CanWriteAndReadLines
+		{
+			private StringBuilder _sb;
+			private AsyncDuplexStreamHandler _handler;
+
+			[SetUp]
+			public void WhenWritingLines()
+			{
+				var es = new EchoStream();
+				var sr = new StreamReader(es);
+				_sb = new StringBuilder();
+				var sw = new StringWriter(_sb);
+				_handler = new AsyncDuplexStreamHandler(sr, sw);
+
+				_handler.WriteLine("Should end up in the StreamWriter");
+				_handler.WriteLine("With a line break after each");
+			}
+
+			[Test]
+			public void LinesAreWrittenToInput()
+			{
+				var expected = String.Join(Environment.NewLine, "Should end up in the StreamWriter", "With a line break after each", "");
+				Assert.That(_sb.ToString(), Is.EqualTo(expected));
+			}
+
+			[Test]
+			public void LinesAreWrittenToOutput()
+			{
+				var timeout = TimeSpan.FromMilliseconds(1);
+				Assert.That(_handler.ReadLine(timeout), Is.EqualTo("Should end up in the StreamWriter"));
+				Assert.That(_handler.ReadLine(timeout), Is.EqualTo("With a line break after each"));
+			}
 		}
 
 		[Test]
-		public void CanReadASingleLine()
+		public void CanReadLinesUntilEndOfStream()
 		{
 			var sr = new StringReader(String.Join(
 				Environment.NewLine,
@@ -41,14 +96,14 @@ namespace ConsoleScenario.Tests.Unit
 
 			Assert.That(handler.ReadLine(TimeSpan.Zero), Is.EqualTo("Line 1"));
 			Assert.That(handler.ReadLine(TimeSpan.Zero), Is.EqualTo("Line 2"));
+			Assert.That(handler.ReadLine(TimeSpan.Zero), Is.Null);
 		}
 
 		[Test]
 		[ExpectedException(typeof(TimeoutException), ExpectedMessage = "No result in alloted time: 00.1000s")]
-		public void CanReadUntilTimeout()
+		public void ThrowsWhenTimeoutReached()
 		{
-			var stream = new BlockingStream();
-			var sr = new StreamReader(stream);
+			var sr = new StreamReader(new BlockingStream());
 			var sw = new StringWriter();
 
 			var handler = new AsyncDuplexStreamHandler(sr, sw);
@@ -56,55 +111,46 @@ namespace ConsoleScenario.Tests.Unit
 			handler.ReadLine(TimeSpan.FromMilliseconds(100));
 		}
 
-		[Test]
-		public void CanReadUntilStreamComplete()
+		public class CanWaitForExit
 		{
-			var sr = new StringReader("");
-			var sw = new StringWriter();
-
-			var handler = new AsyncDuplexStreamHandler(sr, sw);
-
-			handler.ReadLine(TimeSpan.FromMilliseconds(100));
-			Assert.That(handler.ReadLine(TimeSpan.FromMilliseconds(100)), Is.Null);
-		}
-
-		[Test]
-		public void WaitForExitExitsImmediatelyWhenNothingToWaitFor()
-		{
-			var sr = new StringReader("");
-			var sw = new StringWriter();
-
-			var handler = new AsyncDuplexStreamHandler(sr, sw);
-
-			handler.WaitForExit();
-			Assert.Pass("Successfully skipped waiting since there was nothing to do");
-		}
-
-		[Test]
-		public void WaitForExitBlocksWhenStillReading()
-		{
-			var blockingStream = new BlockingStream();
-			var sr = new StreamReader(blockingStream);
-			var sw = new StringWriter();
-
-			var handler = new AsyncDuplexStreamHandler(sr, sw);
-
-			var stopWatch = new Stopwatch();
-			stopWatch.Start();
-
-			new Task(() =>
+			[Test]
+			public void WaitForExitExitsImmediatelyWhenNothingToWaitFor()
 			{
-				Thread.Sleep(100);
-				blockingStream.Unblock();
-			}).Start();
-			handler.WaitForExit();
+				var sr = new StringReader("");
+				var sw = new StringWriter();
 
-			stopWatch.Stop();
+				var handler = new AsyncDuplexStreamHandler(sr, sw);
 
-			if (stopWatch.ElapsedMilliseconds < 100)
-				Assert.Fail("WaitForExit returned before the timer finished");
-			else
-				Assert.Pass("Successfully waited for the stream to end");
+				handler.WaitForExit();
+				Assert.Pass("Successfully skipped waiting since there was nothing to do");
+			}
+
+			[Test]
+			public void WaitForExitBlocksWhenStillReading()
+			{
+				var blockingStream = new BlockingStream();
+				var sr = new StreamReader(blockingStream);
+				var sw = new StringWriter();
+
+				var handler = new AsyncDuplexStreamHandler(sr, sw);
+
+				var stopWatch = new Stopwatch();
+				stopWatch.Start();
+
+				new Task(() =>
+				{
+					Thread.Sleep(100);
+					blockingStream.Unblock();
+				}).Start();
+				handler.WaitForExit();
+
+				stopWatch.Stop();
+
+				if (stopWatch.ElapsedMilliseconds < 100)
+					Assert.Fail("WaitForExit returned before the timer finished");
+				else
+					Assert.Pass("Successfully waited for the stream to end");
+			}
 		}
 	}
 }

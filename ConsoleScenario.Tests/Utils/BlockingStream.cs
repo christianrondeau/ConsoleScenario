@@ -61,5 +61,15 @@ namespace ConsoleScenario.Tests.Utils
 			get { return 0; }
 			set { throw new NotImplementedException(); }
 		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				Unblock();
+			}
+
+			base.Dispose(disposing);
+		}
 	}
 }
