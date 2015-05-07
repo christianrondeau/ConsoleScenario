@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ConsoleScenario
@@ -21,7 +22,7 @@ namespace ConsoleScenario
 
 	public interface IAsyncDuplexStreamHandler : IDisposable
 	{
-		char ReadChar(TimeSpan timeout);
+		char Read(TimeSpan timeout);
 		string ReadLine(TimeSpan timeout);
 		void WriteLine(string command);
 		void WaitForExit();
@@ -34,7 +35,7 @@ namespace ConsoleScenario
 		private readonly TextWriter _input;
 		private readonly TextReader _output;
 		private readonly Task _task;
-		private readonly BlockingCollection<string> _pendingOutputLines = new BlockingCollection<string>();
+		private readonly BlockingCollection<char> _pendingChars = new BlockingCollection<char>();
 
 		public AsyncDuplexStreamHandler(TextReader output, TextWriter input)
 		{
@@ -45,29 +46,52 @@ namespace ConsoleScenario
 			_task.Start();
 		}
 
-		public char ReadChar(TimeSpan timeout)
+		public char Read(TimeSpan timeout)
 		{
-			return char.MinValue;
-		}
+			char c;
 
-		public string ReadLine(TimeSpan timeout)
-		{
-			string line;
-			
 			if (timeout == TimeSpan.Zero)
 				timeout = VeryLongTimeout;
 
-			if (_pendingOutputLines.TryTake(out line, timeout))
-				return line;
+			if (_pendingChars.TryTake(out c, timeout))
+				return c;
 
-			if (_pendingOutputLines.IsAddingCompleted)
-				return null;
+			if (_pendingChars.IsAddingCompleted)
+				return char.MinValue;
 
 			throw new TimeoutException(string.Format(@"No result in alloted time: {0:ss\.ffff}s", timeout));
 		}
 
+		public string ReadLine(TimeSpan timeout)
+		{
+			var sb = new StringBuilder();
+
+			char c;
+			while ((c = Read(timeout)) != char.MinValue)
+			{
+				if (c == '\n')
+					return sb.ToString();
+
+				sb.Append(c);
+			}
+
+			return sb.Length == 0 ? null : sb.ToString();
+		}
+
+		public void Write(string command)
+		{
+			foreach (var c in command)
+				_pendingChars.Add(c);
+
+			_input.Write(command);
+		}
+
 		public void WriteLine(string command)
 		{
+			foreach (var c in command)
+				_pendingChars.Add(c);
+			_pendingChars.Add('\n');
+
 			_input.WriteLine(command);
 		}
 
@@ -79,24 +103,45 @@ namespace ConsoleScenario
 		public void Dispose()
 		{
 			if (_task != null) _task.Dispose();
-			if(_pendingOutputLines != null) _pendingOutputLines.Dispose();
+			if (_pendingChars != null) _pendingChars.Dispose();
 		}
 
 		private void ReadLinesAsync()
 		{
-			string line;
-			while ((line = _output.ReadLine()) != null)
-			{
 #if(DEBUG)
-				Debug.WriteLine("DEBUG: " + line);
+			var output = new StringBuilder();
 #endif
-				_pendingOutputLines.Add(line);
+			int nextChar;
+			while ((nextChar = _output.Read()) != -1)
+			{
+				var value = (char) nextChar;
+
+				if (nextChar == '\r')
+					continue;
+
+#if(DEBUG)
+				if (value == '\n')
+				{
+					Debug.WriteLine("DEBUG: " + output);
+					output.Clear();
+				}
+				else
+				{
+					output.Append(value);
+				}
+#endif
+
+				_pendingChars.Add(value);
 			}
 
 #if(DEBUG)
-			Debug.WriteLine("DEBUG: >> Out stream closed");
+			if (output.Length > 0)
+				Debug.WriteLine("DEBUG: " + output);
+
+			Debug.WriteLine("DEBUG: >> End of stream");
 #endif
-			_pendingOutputLines.CompleteAdding();
+
+			_pendingChars.CompleteAdding();
 		}
 	}
 }

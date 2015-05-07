@@ -257,7 +257,7 @@ namespace ConsoleScenario.Tests.Functional
 				GivenATestConsoleScenario("yes-no")
 					.ExpectPrompt("Do you want to continue? (y/n): ")
 					.Input("y")
-					.Expect("You have entered yes")
+					.Expect("You have selected yes")
 					.Run();
 			}
 
@@ -271,7 +271,7 @@ namespace ConsoleScenario.Tests.Functional
 						.Run(),
 					ScenarioHelper.Expect(
 						"Unexpected end of stream",
-						1,
+						2,
 						null,
 						"Expected"
 						));
@@ -282,14 +282,28 @@ namespace ConsoleScenario.Tests.Functional
 			{
 				ScenarioHelper.Do(() =>
 					GivenATestConsoleScenario("two-lines")
-						.Any()
-						.ExpectPrompt("Expected")
+						.ExpectPrompt("Line 1 (from here, an unexpected line break is expected)")
 						.Run(),
 					ScenarioHelper.Expect(
 						"Unexpected end of line",
 						1,
-						null,
-						"Expected"
+						"Line 1",
+						"Line 1 (from here, an unexpected line break is expected)"
+						));
+			}
+
+			[Test]
+			public void FailureBecauseUnexpectedPrompt()
+			{
+				ScenarioHelper.Do(() =>
+					GivenATestConsoleScenario("one-line")
+						.ExpectPrompt("Single line surprise!")
+						.Run(),
+					ScenarioHelper.Expect(
+						"Unexpected prompt at character 12",
+						1,
+						"Single line ",
+						"Single line surprise!"
 						));
 			}
 		}

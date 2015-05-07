@@ -62,7 +62,7 @@ namespace ConsoleScenario.TestApp
 		{
 			Console.Write("Do you want to continue? (y/n): ");
 			var value = Console.ReadLine();
-			Console.WriteLine(string.Format("You have selected {0}", value) == "y" ? "yes" : "no");
+			Console.WriteLine("You have selected {0}", value == "y" ? "yes" : "no");
 		}
 	}
 }

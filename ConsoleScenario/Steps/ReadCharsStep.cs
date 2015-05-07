@@ -10,7 +10,7 @@ namespace ConsoleScenario.Steps
 
 	public class ReadCharsStep : IReadCharStep
 	{
-		private readonly string _value;
+		private readonly string _expected;
 
 		public TimeSpan Timeout { get; private set; }
 
@@ -20,48 +20,56 @@ namespace ConsoleScenario.Steps
 			return this;
 		}
 
-		public ReadCharsStep(string value)
+		public ReadCharsStep(string expected)
 		{
-			if (value == null) throw new ArgumentNullException("value");
+			if (expected == null) throw new ArgumentNullException("expected");
 
-			_value = value;
+			_expected = expected;
 		}
 
 		public void Run(IAsyncDuplexStreamHandler asyncDuplexStreamHandler, ref int lineIndex)
 		{
+			lineIndex++;
+			var sb = new StringBuilder();
 
 			var charIndex = 0;
-			foreach (var expectedChar in _value)
+			foreach (var expectedChar in _expected)
 			{
 				try
 				{
-					var actualChar = asyncDuplexStreamHandler.ReadChar(Timeout);
-					ValidateChar(lineIndex, actualChar, expectedChar, charIndex++);
+					var actualChar = asyncDuplexStreamHandler.Read(Timeout);
+					ValidateChar(lineIndex, actualChar, expectedChar, charIndex++, sb);
+					sb.Append(actualChar);
 				}
 				catch (TimeoutException exc)
 				{
-					throw new ScenarioAssertionException("Timeout", lineIndex, null, _value, exc);
+					throw new ScenarioAssertionException("Timeout", lineIndex, null, _expected, exc);
 				}
 			}
 		}
 
-		private void ValidateChar(int lineIndex, char actual, char expected, int position)
+		private void ValidateChar(int lineIndex, char actual, char expected, int position, StringBuilder sb)
 		{
 			switch (actual)
 			{
 				case char.MinValue:
-					throw new ScenarioAssertionException("Unexpected end of stream", lineIndex, null, _value);
+					throw new ScenarioAssertionException("Unexpected end of stream", lineIndex, GetStringBuildValueOrNull(sb), _expected);
 				case '\r':
 				case '\n':
-					throw new ScenarioAssertionException("Unexpected end of line", lineIndex, null, _value);
+					throw new ScenarioAssertionException("Unexpected end of line", lineIndex, GetStringBuildValueOrNull(sb), _expected);
 			}
 
 			if (actual != expected)
 				throw new ScenarioAssertionException(
 					string.Format("Unexpected prompt at character {0}", position),
 					lineIndex,
-					actual.ToString(),
-					_value);
+					GetStringBuildValueOrNull(sb),
+					_expected);
+		}
+
+		private static string GetStringBuildValueOrNull(StringBuilder sb)
+		{
+			return sb.Length > 0 ? sb.ToString() : null;
 		}
 	}
 }

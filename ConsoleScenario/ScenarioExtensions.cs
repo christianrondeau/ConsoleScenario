@@ -10,6 +10,7 @@ namespace ConsoleScenario
 		public static IScenario Input(this IScenario scenario, string value)
 		{
 			scenario.AddStep(new InputStep(value));
+			scenario.AddStep(new ReadLineAssertionStep(new AnyLineAssertion())); // Read what was just inputted
 			return scenario;
 		}
 
