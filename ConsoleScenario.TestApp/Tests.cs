@@ -16,7 +16,8 @@ namespace ConsoleScenario.TestApp
 				{"timeout", Timeout},
 				{"print-input", PrintInput},
 				{"count-to-ten", CountToTen},
-				{"yes-no", YesNo}
+				{"yes-no", YesNo},
+				{"print-guid", PrintGuid}
 			};
 		}
 
@@ -63,6 +64,13 @@ namespace ConsoleScenario.TestApp
 			Console.Write("Do you want to continue? (y/n): ");
 			var value = Console.ReadLine();
 			Console.WriteLine("You have selected {0}", value == "y" ? "yes" : "no");
+		}
+
+		private static void PrintGuid()
+		{
+			var guid = Guid.NewGuid().ToString();
+			Console.WriteLine("The guid will be: {0}", guid);
+			Console.WriteLine("The guid is: {0}", guid);
 		}
 	}
 }

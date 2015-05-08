@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using ConsoleScenario.Tests.Utils;
 using NUnit.Framework;
 
@@ -5,12 +6,10 @@ namespace ConsoleScenario.Tests.Functional
 {
 	public class CallbackTests : EndToEndTestsBase
 	{
-		private const string TestName = "three-lines";
-
 		[Test]
 		public void SuccessWithCallbacks()
 		{
-			GivenATestConsoleScenario(TestName)
+			GivenATestConsoleScenario("three-lines")
 				.Expect(line => line != null)
 				.Expect(line => line == "This is the middle line.")
 				.Expect(line => line.Contains("last"))
@@ -18,10 +17,20 @@ namespace ConsoleScenario.Tests.Functional
 		}
 
 		[Test]
+		public void CanExtractValuesWithRegexHelper()
+		{
+			string guid = null;
+			GivenATestConsoleScenario("print-guid")
+				.Extract("The guid will be: (.+)", vars => guid = vars[0])
+				.Expect(() => string.Format("The guid is: {0}", guid))
+				.Run();
+		}
+
+		[Test]
 		public void FailureBecauseCallbackReturnsFalse()
 		{
 			ScenarioHelper.Do(() =>
-				GivenATestConsoleScenario(TestName)
+				GivenATestConsoleScenario("three-lines")
 					.Expect(line => false)
 					.Run(),
 				ScenarioHelper.Expect(
@@ -36,7 +45,7 @@ namespace ConsoleScenario.Tests.Functional
 		public void FailureBecauseMissingLine()
 		{
 			ScenarioHelper.Do(() =>
-				GivenATestConsoleScenario(TestName)
+				GivenATestConsoleScenario("three-lines")
 					.Any(3)
 					.Expect(line => true)
 					.Run(),

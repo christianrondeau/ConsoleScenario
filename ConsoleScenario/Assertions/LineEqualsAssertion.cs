@@ -4,17 +4,12 @@ namespace ConsoleScenario.Assertions
 {
 	public class LineEqualsAssertion : IAssertion
 	{
-		public static IAssertion Create(string expectedLine)
-		{
-			return new LineEqualsAssertion(expectedLine);
-		}
-
 		private readonly string _expectedLine;
 
 		public LineEqualsAssertion(string expectedLine)
 		{
-			_expectedLine = expectedLine;
 			if (expectedLine == null) throw new ArgumentNullException("expectedLine");	
+			_expectedLine = expectedLine;
 		}
 
 		public AssertionResult Assert(string actualLine)

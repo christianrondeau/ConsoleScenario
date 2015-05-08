@@ -43,6 +43,7 @@
     <Compile Include="AssertionResult.cs" />
     <Compile Include="Assertions\CallbackAssertion.cs" />
     <Compile Include="Assertions\IgnoreLineAssertion.cs" />
+    <Compile Include="Assertions\LateLineEqualsAssertion.cs" />
     <Compile Include="Assertions\NoExtraneousLinesAssertion.cs" />
     <Compile Include="IScenarioStep.cs" />
     <Compile Include="ProcessFactory.cs" />

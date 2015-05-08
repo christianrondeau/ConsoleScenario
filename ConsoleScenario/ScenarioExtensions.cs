@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using ConsoleScenario.Assertions;
 using ConsoleScenario.Steps;
 
@@ -44,6 +45,18 @@ namespace ConsoleScenario
 			return scenario;
 		}
 
+		public static IScenario Expect(this IScenario scenario, Func<string> expectedLineFn, TimeSpan timeout)
+		{
+			scenario.AddStep(new ReadLineAssertionStep(new LateLineEqualsAssertion(expectedLineFn)).WithTimeout(timeout));
+			return scenario;
+		}
+
+		public static IScenario Expect(this IScenario scenario, Func<string> expectedLineFn)
+		{
+			scenario.AddStep(new ReadLineAssertionStep(new LateLineEqualsAssertion(expectedLineFn)));
+			return scenario;
+		}
+
 		public static IScenario Any(this IScenario scenario, int count, TimeSpan timeout)
 		{
 			scenario.AddStep(new ReadLineAssertionStep(new AnyLineAssertion()).Times(count).WithTimeout(timeout));
@@ -84,6 +97,29 @@ namespace ConsoleScenario
 		{
 			scenario.AddStep(new ReadUntilStep(condition).WithTimeout(timeout));
 			return scenario;
+		}
+
+		public static IScenario Extract(this IScenario scenario, string pattern, Action<string[]> assign, TimeSpan timeout)
+		{
+			scenario.AddStep(new ReadLineAssertionStep(new CallbackAssertion(line => CreateExtractCallback(pattern, line, assign))).WithTimeout(timeout));
+			return scenario;
+		}
+
+		public static IScenario Extract(this IScenario scenario, string pattern, Action<string[]> assign)
+		{
+			scenario.AddStep(new ReadLineAssertionStep(new CallbackAssertion(line => CreateExtractCallback(pattern, line, assign))));
+			return scenario;
+		}
+
+		private static bool CreateExtractCallback(string pattern, string line, Action<string[]> assign)
+		{
+			var match = Regex.Match(line, pattern);
+
+			if (!match.Success)
+				return false;
+
+			assign(match.Groups.Cast<Capture>().Skip(1).Select(group => group.Value).ToArray());
+			return true;
 		}
 	}
 }
