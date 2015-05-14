@@ -44,10 +44,13 @@
     <Compile Include="Assertions\CallbackAssertion.cs" />
     <Compile Include="Assertions\IgnoreLineAssertion.cs" />
     <Compile Include="Assertions\LateLineEqualsAssertion.cs" />
+    <Compile Include="Assertions\LineContainsAssertion.cs" />
     <Compile Include="Assertions\NoExtraneousLinesAssertion.cs" />
     <Compile Include="IScenarioStep.cs" />
     <Compile Include="ProcessFactory.cs" />
+    <Compile Include="Steps\IReadAssertionStep.cs" />
     <Compile Include="Steps\ReadCharsStep.cs" />
+    <Compile Include="Steps\ReadErrorLineAssertionStep.cs" />
     <Compile Include="Steps\ReadLineAssertionStep.cs" />
     <Compile Include="Steps\InputStep.cs" />
     <Compile Include="IAssertion.cs" />
@@ -59,7 +62,8 @@
     <Compile Include="ScenarioAssertionException.cs" />
     <Compile Include="ScenarioExtensions.cs" />
     <Compile Include="Scenarios.cs" />
-    <Compile Include="Steps\ReadStepBase.cs" />
+    <Compile Include="Steps\ReadHelper.cs" />
+    <Compile Include="Steps\ReadAssertionStepBase.cs" />
     <Compile Include="Steps\ReadUntilStep.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

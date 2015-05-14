@@ -27,7 +27,9 @@ Here is an overview of the main features that should be implemented
 - [-] Ability to private custom line assertion callbacks
 - [X] Ensure Process is stopped if an assertion error is thrown, or if the Scenario is disposed
 - [ ] Handle console errors and forward them as assertion failed
-- [ ] Expect console errors
+- [X] Expect console errors
+- [ ] Ignore console errors
+- [ ] Check console exit code
 - [?] Input and output characters instead of lines
 - [ ] Nice documentation
 

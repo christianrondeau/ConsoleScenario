@@ -47,7 +47,8 @@ namespace ConsoleScenario
 				{
 					var asyncDuplexStreamHandler = _asyncDuplexStreamHandlerFactory.Create(
 											process.StandardOutput,
-											process.StandardInput
+											process.StandardInput,
+											process.StandardError
 											);
 
 					RunSteps(asyncDuplexStreamHandler, ref lineIndex);

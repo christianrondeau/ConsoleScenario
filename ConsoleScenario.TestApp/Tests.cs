@@ -17,7 +17,8 @@ namespace ConsoleScenario.TestApp
 				{"print-input", PrintInput},
 				{"count-to-ten", CountToTen},
 				{"yes-no", YesNo},
-				{"print-guid", PrintGuid}
+				{"print-guid", PrintGuid},
+				{"error", Error}
 			};
 		}
 
@@ -71,6 +72,12 @@ namespace ConsoleScenario.TestApp
 			var guid = Guid.NewGuid().ToString();
 			Console.WriteLine("The guid will be: {0}", guid);
 			Console.WriteLine("The guid is: {0}", guid);
+		}
+
+		private static void Error()
+		{
+			Console.WriteLine("Error incoming...");
+			throw new ApplicationException("This is the error text");
 		}
 	}
 }

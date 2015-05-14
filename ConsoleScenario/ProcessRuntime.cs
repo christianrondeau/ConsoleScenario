@@ -10,6 +10,8 @@ namespace ConsoleScenario
 	{
 		TextReader StandardOutput { get; }
 		TextWriter StandardInput { get; }
+		TextReader StandardError { get; }
+
 		bool ForceExit(TimeSpan? waitForExit);
 	}
 
@@ -47,6 +49,11 @@ namespace ConsoleScenario
 		public TextWriter StandardInput
 		{
 			get { return _process.StandardInput; }
+		}
+
+		public TextReader StandardError
+		{
+			get { return _process.StandardError; }
 		}
 
 		private ProcessRuntime(Process process)

@@ -111,6 +111,18 @@ namespace ConsoleScenario
 			return scenario;
 		}
 
+		public static IScenario ExpectError(this IScenario scenario, string message, TimeSpan timeout)
+		{
+			scenario.AddStep(new ReadErrorLineAssertionStep(new LineContainsAssertion(message)).WithTimeout(timeout));
+			return scenario;
+		}
+
+		public static IScenario ExpectError(this IScenario scenario, string message)
+		{
+			scenario.AddStep(new ReadErrorLineAssertionStep(new LineContainsAssertion(message)));
+			return scenario;
+		}
+
 		private static bool CreateExtractCallback(string pattern, string line, Action<string[]> assign)
 		{
 			var match = Regex.Match(line, pattern);

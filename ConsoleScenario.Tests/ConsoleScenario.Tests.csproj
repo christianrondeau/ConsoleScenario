@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Functional\ErrorTests.cs" />
     <Compile Include="Functional\AnyTests.cs" />
     <Compile Include="Functional\CallbackTests.cs" />
     <Compile Include="Functional\InputTests.cs" />
@@ -58,6 +59,7 @@
     <Compile Include="Unit\Assertions\CallbackAssertionTests.cs" />
     <Compile Include="Unit\Assertions\IgnoreLineAssertionTests.cs" />
     <Compile Include="Unit\Assertions\LateLineEqualsAssertionTests.cs" />
+    <Compile Include="Unit\Assertions\LineContainsAssertionTests.cs" />
     <Compile Include="Unit\Assertions\NoExtraneousLinesAssertionTests.cs" />
     <Compile Include="Unit\AsyncDuplexStreamHandlerFactoryTests.cs" />
     <Compile Include="Unit\AsyncDuplexStreamHandlerTests.cs" />

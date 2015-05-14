@@ -19,11 +19,12 @@ namespace ConsoleScenario.Tests.Unit
 			[SetUp]
 			public void WhenWritingChars()
 			{
-				var es = new EchoStream();
-				var sr = new StreamReader(es);
 				_sb = new StringBuilder();
-				var sw = new StringWriter(_sb);
-				_handler = new AsyncDuplexStreamHandler(sr, sw);
+				_handler = new AsyncDuplexStreamHandler(
+					new StreamReader(new EchoStream()),
+					new StringWriter(_sb),
+					new StringReader("")
+					);
 
 				_handler.Write("123");
 				_handler.Write("456");
@@ -56,11 +57,12 @@ namespace ConsoleScenario.Tests.Unit
 			[SetUp]
 			public void WhenWritingLines()
 			{
-				var es = new EchoStream();
-				var sr = new StreamReader(es);
 				_sb = new StringBuilder();
-				var sw = new StringWriter(_sb);
-				_handler = new AsyncDuplexStreamHandler(sr, sw);
+				_handler = new AsyncDuplexStreamHandler(
+					new StreamReader(new EchoStream()),
+					new StringWriter(_sb),
+					new StringReader("")
+					);
 
 				_handler.WriteLine("Should end up in the StreamWriter");
 				_handler.WriteLine("With a line break after each");
@@ -90,9 +92,8 @@ namespace ConsoleScenario.Tests.Unit
 				"Line 1",
 				"Line 2"
 				));
-			var sw = new StringWriter();
 
-			var handler = new AsyncDuplexStreamHandler(sr, sw);
+			var handler = new AsyncDuplexStreamHandler(sr, new StringWriter(), new StringReader(""));
 
 			Assert.That(handler.ReadLine(TimeSpan.Zero), Is.EqualTo("Line 1"));
 			Assert.That(handler.ReadLine(TimeSpan.Zero), Is.EqualTo("Line 2"));
@@ -103,10 +104,11 @@ namespace ConsoleScenario.Tests.Unit
 		[ExpectedException(typeof(TimeoutException), ExpectedMessage = "No result in alloted time: 00.1000s")]
 		public void ThrowsWhenTimeoutReached()
 		{
-			var sr = new StreamReader(new BlockingStream());
-			var sw = new StringWriter();
-
-			var handler = new AsyncDuplexStreamHandler(sr, sw);
+			var handler = new AsyncDuplexStreamHandler(
+				new StreamReader(new BlockingStream()),
+				new StringWriter(),
+				new StringReader("")
+				);
 
 			handler.ReadLine(TimeSpan.FromMilliseconds(100));
 		}
@@ -116,10 +118,11 @@ namespace ConsoleScenario.Tests.Unit
 			[Test]
 			public void WaitForExitExitsImmediatelyWhenNothingToWaitFor()
 			{
-				var sr = new StringReader("");
-				var sw = new StringWriter();
-
-				var handler = new AsyncDuplexStreamHandler(sr, sw);
+				var handler = new AsyncDuplexStreamHandler(
+					new StringReader(""),
+					new StringWriter(),
+					new StringReader("")
+					);
 
 				handler.WaitForExit();
 				Assert.Pass("Successfully skipped waiting since there was nothing to do");
@@ -129,10 +132,12 @@ namespace ConsoleScenario.Tests.Unit
 			public void WaitForExitBlocksWhenStillReading()
 			{
 				var blockingStream = new BlockingStream();
-				var sr = new StreamReader(blockingStream);
-				var sw = new StringWriter();
 
-				var handler = new AsyncDuplexStreamHandler(sr, sw);
+				var handler = new AsyncDuplexStreamHandler(
+					new StreamReader(blockingStream),
+					new StringWriter(),
+					new StringReader("")
+					);
 
 				var stopWatch = new Stopwatch();
 				stopWatch.Start();

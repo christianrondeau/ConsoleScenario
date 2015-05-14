@@ -7,8 +7,9 @@ namespace ConsoleScenario.Steps
 		IReadUntilStep WithTimeout(TimeSpan timeout);
 	}
 
-	public class ReadUntilStep : ReadStepBase, IReadUntilStep
+	public class ReadUntilStep : IReadUntilStep
 	{
+		public TimeSpan Timeout { get; private set; }
 		private readonly Func<string, bool> _condition;
 
 		public IReadUntilStep WithTimeout(TimeSpan timeout)
@@ -30,7 +31,7 @@ namespace ConsoleScenario.Steps
 			do
 			{
 				lineIndex++;
-				actualLine = ReadLineOrTimeout(lineIndex, asyncDuplexStreamHandler);
+				actualLine = ReadHelper.WithChecks(() => asyncDuplexStreamHandler.ReadLine(Timeout), lineIndex);
 
 				if (_condition(actualLine))
 					return;

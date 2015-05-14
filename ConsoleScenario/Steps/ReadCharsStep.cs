@@ -35,16 +35,9 @@ namespace ConsoleScenario.Steps
 			var charIndex = 0;
 			foreach (var expectedChar in _expected)
 			{
-				try
-				{
-					var actualChar = asyncDuplexStreamHandler.Read(Timeout);
-					ValidateChar(lineIndex, actualChar, expectedChar, charIndex++, sb);
-					sb.Append(actualChar);
-				}
-				catch (TimeoutException exc)
-				{
-					throw new ScenarioAssertionException("Timeout", lineIndex, null, _expected, exc);
-				}
+				var actualChar = ReadHelper.WithChecks(() => asyncDuplexStreamHandler.Read(Timeout), lineIndex);
+				ValidateChar(lineIndex, actualChar, expectedChar, charIndex++, sb);
+				sb.Append(actualChar);
 			}
 		}
 

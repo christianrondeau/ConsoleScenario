@@ -9,10 +9,11 @@ namespace ConsoleScenario.Tests.Unit
 		[Test]
 		public void CanCreateAnInstance()
 		{
-			var sr = new StringReader("");
-			var sw = new StringWriter();
+			var output = new StringReader("");
+			var input = new StringWriter();
+			var error = new StringReader("");
 
-			Assert.That(new AsyncDuplexStreamHandlerFactory().Create(sr, sw), Is.TypeOf<AsyncDuplexStreamHandler>());
+			Assert.That(new AsyncDuplexStreamHandlerFactory().Create(output, input, error), Is.TypeOf<AsyncDuplexStreamHandler>());
 		}
 	}
 }
