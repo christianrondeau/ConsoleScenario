@@ -19,8 +19,22 @@ namespace ConsoleScenario.TestApp
 				{"yes-no", YesNo},
 				{"print-guid", PrintGuid},
 				{"error", Error},
-				{"exit-code", ExitCode}
+				{"exit-code", ExitCode},
+				{"color", Color}
 			};
+		}
+
+		private static void Color()
+		{
+			Console.Write("This test is ");
+			Console.ForegroundColor = ConsoleColor.Green;
+			Console.WriteLine("green");
+
+			Console.Write("This test is ");
+			Console.ForegroundColor = ConsoleColor.Red;
+			Console.WriteLine("red");
+
+			Console.ResetColor();
 		}
 
 		public static void OneLine()

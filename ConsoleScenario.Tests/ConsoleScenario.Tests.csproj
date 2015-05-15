@@ -52,6 +52,7 @@
     <Compile Include="Functional\InputTests.cs" />
     <Compile Include="Functional\InputWithPromptTests.cs" />
     <Compile Include="Functional\MultiLinesTests.cs" />
+    <Compile Include="Functional\ColorTests.cs" />
     <Compile Include="Functional\OneLineTests.cs" />
     <Compile Include="Functional\TimeoutTests.cs" />
     <Compile Include="Functional\UntilTests.cs" />
