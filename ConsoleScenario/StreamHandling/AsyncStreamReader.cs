@@ -135,7 +135,17 @@ namespace ConsoleScenario.StreamHandling
 		public void Dispose()
 		{
 			_cancel.Cancel();
-			_task.Wait();
+			try
+			{
+				_task.Wait();
+			}
+			catch (Exception exc)
+			{
+#if(DEBUG)
+				Debug.WriteLine("DISPOSE: " + exc.Message);
+#endif
+				throw;
+			}
 
 			_task.Dispose();
 			_cancel.Dispose();
