@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Functional\ExitCodesTests.cs" />
     <Compile Include="Functional\ErrorTests.cs" />
     <Compile Include="Functional\AnyTests.cs" />
     <Compile Include="Functional\CallbackTests.cs" />

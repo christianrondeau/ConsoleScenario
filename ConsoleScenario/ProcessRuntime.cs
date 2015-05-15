@@ -12,7 +12,7 @@ namespace ConsoleScenario
 		TextWriter StandardInput { get; }
 		TextReader StandardError { get; }
 
-		bool ForceExit(TimeSpan? waitForExit);
+		bool ForceExit(out int? exitCode, TimeSpan? waitForExit);
 	}
 
 	public sealed class ProcessRuntime : IProcessRuntime
@@ -65,9 +65,13 @@ namespace ConsoleScenario
 			_process.Start();
 		}
 
-		public bool ForceExit(TimeSpan? waitForExit)
+		public bool ForceExit(out int? exitCode, TimeSpan? waitForExit)
 		{
-			if (_process.HasExited) return false;
+			if (_process.HasExited)
+			{
+				exitCode = _process.ExitCode;
+				return false;
+			}
 
 			try
 			{
@@ -78,11 +82,18 @@ namespace ConsoleScenario
 #if(DEBUG)
 				Debug.WriteLine("DEBUG: CloseMainWindow failed on SUT process");
 #endif
-				if (_process.HasExited) return false;
+				if (_process.HasExited)
+				{
+					exitCode = _process.ExitCode;
+					return false;
+				}
 			}
 
 			if (_process.WaitForExit(waitForExit.HasValue ? (int) waitForExit.Value.TotalMilliseconds : DefaultWaitForExitMilliseconds))
+			{
+				exitCode = _process.ExitCode;
 				return false;
+			}
 
 #if(DEBUG)
 			Debug.WriteLine("DEBUG: WaitForExit failed on SUT process; Killing process");
@@ -97,6 +108,7 @@ namespace ConsoleScenario
 				try
 				{
 					_process.Kill();
+					exitCode = null;
 					return true;
 				}
 				catch (Exception exc)

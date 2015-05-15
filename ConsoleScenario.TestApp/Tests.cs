@@ -18,7 +18,8 @@ namespace ConsoleScenario.TestApp
 				{"count-to-ten", CountToTen},
 				{"yes-no", YesNo},
 				{"print-guid", PrintGuid},
-				{"error", Error}
+				{"error", Error},
+				{"exit-code", ExitCode}
 			};
 		}
 
@@ -78,6 +79,11 @@ namespace ConsoleScenario.TestApp
 		{
 			Console.WriteLine("Error incoming...");
 			throw new ApplicationException("This is the error text");
+		}
+
+		private static void ExitCode()
+		{
+			Environment.Exit(-1);
 		}
 	}
 }

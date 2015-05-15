@@ -123,6 +123,18 @@ namespace ConsoleScenario
 			return scenario;
 		}
 
+		public static IScenario ExpectExitCode(this IScenario scenario, int exitCode)
+		{
+			scenario.ExpectedExitCode = exitCode;
+			return scenario;
+		}
+
+		public static IScenario IgnoreExitCode(this IScenario scenario)
+		{
+			scenario.ExpectedExitCode = null;
+			return scenario;
+		}
+
 		private static bool CreateExtractCallback(string pattern, string line, Action<string[]> assign)
 		{
 			var match = Regex.Match(line, pattern);

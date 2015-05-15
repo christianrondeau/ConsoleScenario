@@ -12,6 +12,7 @@ namespace ConsoleScenario.Tests.Functional
 		{
 			GivenATestConsoleScenario(TestName)
 				.ExpectError("This is the error text")
+				.IgnoreExitCode()
 				.Run();
 		}
 
@@ -22,6 +23,7 @@ namespace ConsoleScenario.Tests.Functional
 				GivenATestConsoleScenario(TestName)
 					.Expect("Error incoming...")
 					.Any()
+					.IgnoreExitCode()
 					.Run(),
 				ScenarioHelper.Expect(
 					"Unexpected console error",

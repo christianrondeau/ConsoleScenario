@@ -26,10 +26,10 @@ Here is an overview of the main features that should be implemented
 - [X] Ability to read a line of console output and place it in a variable, and then use it in later expects (e.g. as a callback per line)
 - [-] Ability to private custom line assertion callbacks
 - [X] Ensure Process is stopped if an assertion error is thrown, or if the Scenario is disposed
-- [ ] Handle console errors and forward them as assertion failed
+- [X] Handle console errors and forward them as assertion failed
 - [X] Expect console errors
-- [ ] Ignore console errors
-- [ ] Check console exit code
+- [X] Ignore console errors
+- [X] Check console exit code
 - [?] Input and output characters instead of lines
 - [ ] Nice documentation
 

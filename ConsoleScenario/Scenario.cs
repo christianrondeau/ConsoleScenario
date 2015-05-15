@@ -6,6 +6,8 @@ namespace ConsoleScenario
 {
 	public interface IScenario
 	{
+		int? ExpectedExitCode { get; set; }
+
 		void Run(TimeSpan? waitForExit = null);
 		void AddStep(IScenarioStep step);
 		void AddSteps(IEnumerable<IScenarioStep> steps);
@@ -13,12 +15,16 @@ namespace ConsoleScenario
 
 	public class Scenario : IScenario
 	{
+		public int? ExpectedExitCode { get; set; }
+
 		private readonly List<IScenarioStep> _steps;
 		private readonly IProcessRuntimeFactory _processRuntimeFactory;
 		private readonly IAsyncDuplexStreamHandlerFactory _asyncDuplexStreamHandlerFactory;
 
 		public Scenario(IProcessRuntimeFactory processRuntimeFactory, IAsyncDuplexStreamHandlerFactory asyncDuplexStreamHandlerFactory)
 		{
+			ExpectedExitCode = 0;
+
 			if (processRuntimeFactory == null) throw new ArgumentNullException("processRuntimeFactory");
 			if (asyncDuplexStreamHandlerFactory == null) throw new ArgumentNullException("asyncDuplexStreamHandlerFactory");
 
@@ -61,10 +67,16 @@ namespace ConsoleScenario
 				}
 				finally
 				{
-					if (process.ForceExit(waitForExit) && exception == null)
-					{
-						var lineThatNeverCameIndex = lineIndex + 1;
+					var lineThatNeverCameIndex = lineIndex + 1;
+
+					int? exitCode;
+					if (process.ForceExit(out exitCode, waitForExit) && exception == null)
 						throw new ScenarioAssertionException("Process wait for exit timeout", lineThatNeverCameIndex, null, null);
+
+					if (ExpectedExitCode.HasValue)
+					{
+						if (exitCode != ExpectedExitCode && exitCode.HasValue)
+							throw new ScenarioAssertionException("Unexpected exit code", lineThatNeverCameIndex, exitCode.ToString(), ExpectedExitCode.ToString());
 					}
 				}
 			}
