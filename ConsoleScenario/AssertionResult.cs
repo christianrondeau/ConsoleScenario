@@ -18,9 +18,12 @@ namespace ConsoleScenario
 
 		public override string ToString()
 		{
-			return Success 
-				? "Success" 
-				: string.Format("Failed: {0}{1}", Message, (Expected != null ? " (expected: '" + Expected + "')" : ""));
+			return Success ? "Success" : GetFailureString();
+		}
+
+		private string GetFailureString()
+		{
+			return string.Format("Failed: {0}{1}", Message, (Expected != null ? " (expected: '" + Expected + "')" : ""));
 		}
 
 		protected bool Equals(AssertionResult other)

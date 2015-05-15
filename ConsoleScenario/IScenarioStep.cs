@@ -1,3 +1,5 @@
+using ConsoleScenario.StreamHandling;
+
 namespace ConsoleScenario
 {
 	public interface IScenarioStep

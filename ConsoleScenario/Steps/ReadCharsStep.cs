@@ -1,20 +1,16 @@
 using System;
 using System.Text;
+using ConsoleScenario.StreamHandling;
 
 namespace ConsoleScenario.Steps
 {
-	public interface IReadCharStep : IScenarioStep
-	{
-		IReadCharStep WithTimeout(TimeSpan timeout);
-	}
-
-	public class ReadCharsStep : IReadCharStep
+	public class ReadCharsStep : IScenarioStep
 	{
 		private readonly string _expected;
 
 		public TimeSpan Timeout { get; private set; }
 
-		public IReadCharStep WithTimeout(TimeSpan timeout)
+		public ReadCharsStep WithTimeout(TimeSpan timeout)
 		{
 			Timeout = timeout;
 			return this;

@@ -1,12 +1,9 @@
 using System;
+using ConsoleScenario.StreamHandling;
 
 namespace ConsoleScenario.Steps
 {
-	public interface IInputStep : IScenarioStep
-	{
-	}
-
-	public class InputStep : IInputStep
+	public class InputStep : IScenarioStep
 	{
 		public string Input { get; private set; }
 

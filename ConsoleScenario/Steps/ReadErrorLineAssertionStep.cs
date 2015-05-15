@@ -1,8 +1,9 @@
 using System;
+using ConsoleScenario.StreamHandling;
 
 namespace ConsoleScenario.Steps
 {
-	public class ReadErrorLineAssertionStep : ReadAssertionStepBase
+	public class ReadErrorLineAssertionStep : ReadLineAssertionStep
 	{
 		public ReadErrorLineAssertionStep(IAssertion assertion)
 			: base(assertion)

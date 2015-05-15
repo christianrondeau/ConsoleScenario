@@ -48,13 +48,11 @@
     <Compile Include="Assertions\NoExtraneousLinesAssertion.cs" />
     <Compile Include="IScenarioStep.cs" />
     <Compile Include="ProcessFactory.cs" />
-    <Compile Include="Steps\IReadAssertionStep.cs" />
     <Compile Include="Steps\ReadCharsStep.cs" />
     <Compile Include="Steps\ReadErrorLineAssertionStep.cs" />
-    <Compile Include="Steps\ReadLineAssertionStep.cs" />
     <Compile Include="Steps\InputStep.cs" />
     <Compile Include="IAssertion.cs" />
-    <Compile Include="AsyncDuplexStreamHandler.cs" />
+    <Compile Include="StreamHandling\AsyncDuplexStreamHandler.cs" />
     <Compile Include="Assertions\LineEqualsAssertion.cs" />
     <Compile Include="ProcessRuntime.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -63,8 +61,10 @@
     <Compile Include="ScenarioExtensions.cs" />
     <Compile Include="Scenarios.cs" />
     <Compile Include="Steps\ReadHelper.cs" />
-    <Compile Include="Steps\ReadAssertionStepBase.cs" />
+    <Compile Include="Steps\ReadLineAssertionStep.cs" />
     <Compile Include="Steps\ReadUntilStep.cs" />
+    <Compile Include="StreamHandling\AsyncDuplexStreamHandlerFactory.cs" />
+    <Compile Include="StreamHandling\AsyncStreamReader.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

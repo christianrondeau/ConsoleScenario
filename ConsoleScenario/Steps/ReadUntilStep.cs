@@ -1,18 +1,14 @@
 using System;
+using ConsoleScenario.StreamHandling;
 
 namespace ConsoleScenario.Steps
 {
-	public interface IReadUntilStep : IScenarioStep
-	{
-		IReadUntilStep WithTimeout(TimeSpan timeout);
-	}
-
-	public class ReadUntilStep : IReadUntilStep
+	public class ReadUntilStep : IScenarioStep
 	{
 		public TimeSpan Timeout { get; private set; }
 		private readonly Func<string, bool> _condition;
 
-		public IReadUntilStep WithTimeout(TimeSpan timeout)
+		public ReadUntilStep WithTimeout(TimeSpan timeout)
 		{
 			Timeout = timeout;
 			return this;

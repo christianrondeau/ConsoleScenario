@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ConsoleScenario.StreamHandling;
 
 namespace ConsoleScenario
 {

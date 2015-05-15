@@ -4,30 +4,39 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using ConsoleScenario.StreamHandling;
 using ConsoleScenario.Tests.Utils;
 using NUnit.Framework;
 
-namespace ConsoleScenario.Tests.Unit
+namespace ConsoleScenario.Tests.Unit.StreamHandling
 {
 	public class AsyncDuplexStreamHandlerTests
 	{
-		public sealed class CanWriteAndReadChars : IDisposable
+		public sealed class CanWriteAndReadChars
 		{
 			private StringBuilder _sb;
 			private AsyncDuplexStreamHandler _handler;
+			private EchoStream _echoStream;
 
 			[SetUp]
 			public void WhenWritingChars()
 			{
 				_sb = new StringBuilder();
+				_echoStream = new EchoStream();
 				_handler = new AsyncDuplexStreamHandler(
-					new StreamReader(new EchoStream()),
+					new StreamReader(_echoStream),
 					new StringWriter(_sb),
 					new StringReader("")
 					);
 
 				_handler.Write("123");
 				_handler.Write("456");
+			}
+
+			[TearDown]
+			public void CloseStreams()
+			{
+				_echoStream.Finish();
 			}
 
 			[Test]
@@ -39,19 +48,10 @@ namespace ConsoleScenario.Tests.Unit
 			[Test]
 			public void CharsAreWrittenToOutput()
 			{
-				var timeout = TimeSpan.FromMilliseconds(1);
-				Assert.That(_handler.Read(timeout), Is.EqualTo('1'));
-				Assert.That(_handler.Read(timeout), Is.EqualTo('2'));
-				Assert.That(_handler.Read(timeout), Is.EqualTo('3'));
-				Assert.That(_handler.Read(timeout), Is.EqualTo('4'));
-				Assert.That(_handler.Read(timeout), Is.EqualTo('5'));
-				Assert.That(_handler.Read(timeout), Is.EqualTo('6'));
-			}
-
-			public void Dispose()
-			{
-				if (_handler != null)
-					_handler.Dispose();
+				foreach (var c in "123456")
+				{
+					Assert.That(_handler.Read(TimeSpan.FromMilliseconds(1)), Is.EqualTo(c));
+				}
 			}
 		}
 
@@ -59,19 +59,27 @@ namespace ConsoleScenario.Tests.Unit
 		{
 			private StringBuilder _sb;
 			private AsyncDuplexStreamHandler _handler;
+			private EchoStream _echoStream;
 
 			[SetUp]
 			public void WhenWritingLines()
 			{
 				_sb = new StringBuilder();
+				_echoStream = new EchoStream();
 				_handler = new AsyncDuplexStreamHandler(
-					new StreamReader(new EchoStream()),
+					new StreamReader(_echoStream),
 					new StringWriter(_sb),
 					new StringReader("")
 					);
 
 				_handler.WriteLine("Should end up in the StreamWriter");
 				_handler.WriteLine("With a line break after each");
+			}
+
+			[TearDown]
+			public void CloseStreams()
+			{
+				_echoStream.Finish();
 			}
 
 			[Test]

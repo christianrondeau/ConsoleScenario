@@ -1,7 +1,8 @@
 ﻿using System.IO;
+using ConsoleScenario.StreamHandling;
 using NUnit.Framework;
 
-namespace ConsoleScenario.Tests.Unit
+namespace ConsoleScenario.Tests.Unit.StreamHandling
 {
 	[TestFixture]
 	public class AsyncDuplexStreamHandlerFactoryTests

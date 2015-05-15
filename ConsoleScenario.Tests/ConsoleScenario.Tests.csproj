@@ -61,8 +61,8 @@
     <Compile Include="Unit\Assertions\LateLineEqualsAssertionTests.cs" />
     <Compile Include="Unit\Assertions\LineContainsAssertionTests.cs" />
     <Compile Include="Unit\Assertions\NoExtraneousLinesAssertionTests.cs" />
-    <Compile Include="Unit\AsyncDuplexStreamHandlerFactoryTests.cs" />
-    <Compile Include="Unit\AsyncDuplexStreamHandlerTests.cs" />
+    <Compile Include="Unit\StreamHandling\AsyncDuplexStreamHandlerFactoryTests.cs" />
+    <Compile Include="Unit\StreamHandling\AsyncDuplexStreamHandlerTests.cs" />
     <Compile Include="Unit\Assertions\LineEqualsAssertionTests.cs" />
     <Compile Include="Utils\BlockingStream.cs" />
     <Compile Include="Utils\EchoStream.cs" />
