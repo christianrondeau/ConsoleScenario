@@ -104,7 +104,7 @@ namespace ConsoleScenario
 		}
 	}
 
-	public class AsyncStreamReader : IDisposable
+	public sealed class AsyncStreamReader : IDisposable
 	{
 		private static readonly TimeSpan VeryLongTimeout = TimeSpan.FromDays(7);
 
@@ -230,15 +230,13 @@ namespace ConsoleScenario
 
 		public void Dispose()
 		{
-			if (_task != null)
-			{
-				_cancel.Cancel();
-				_task.Wait();
-				_task.Dispose();
-			}
+			_cancel.Cancel();
+			_cancel.Dispose();
 
-			if (_pendingChars != null)
-				_pendingChars.Dispose();
+			_task.Wait();
+			_task.Dispose();
+
+			_pendingChars.Dispose();
 		}
 	}
 }

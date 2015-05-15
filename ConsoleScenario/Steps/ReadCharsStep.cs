@@ -41,6 +41,7 @@ namespace ConsoleScenario.Steps
 			}
 		}
 
+		// ReSharper disable once UnusedParameter.Local
 		private void ValidateChar(int lineIndex, char actual, char expected, int position, StringBuilder sb)
 		{
 			switch (actual)

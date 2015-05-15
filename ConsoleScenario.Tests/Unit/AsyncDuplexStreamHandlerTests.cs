@@ -11,7 +11,7 @@ namespace ConsoleScenario.Tests.Unit
 {
 	public class AsyncDuplexStreamHandlerTests
 	{
-		public class CanWriteAndReadChars
+		public sealed class CanWriteAndReadChars : IDisposable
 		{
 			private StringBuilder _sb;
 			private AsyncDuplexStreamHandler _handler;
@@ -47,9 +47,15 @@ namespace ConsoleScenario.Tests.Unit
 				Assert.That(_handler.Read(timeout), Is.EqualTo('5'));
 				Assert.That(_handler.Read(timeout), Is.EqualTo('6'));
 			}
+
+			public void Dispose()
+			{
+				if (_handler != null)
+					_handler.Dispose();
+			}
 		}
 
-		public class CanWriteAndReadLines
+		public sealed class CanWriteAndReadLines : IDisposable
 		{
 			private StringBuilder _sb;
 			private AsyncDuplexStreamHandler _handler;
@@ -81,6 +87,12 @@ namespace ConsoleScenario.Tests.Unit
 				var timeout = TimeSpan.FromMilliseconds(1);
 				Assert.That(_handler.ReadLine(timeout), Is.EqualTo("Should end up in the StreamWriter"));
 				Assert.That(_handler.ReadLine(timeout), Is.EqualTo("With a line break after each"));
+			}
+
+			public void Dispose()
+			{
+				if(_handler != null)
+					_handler.Dispose();
 			}
 		}
 

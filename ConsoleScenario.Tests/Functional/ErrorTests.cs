@@ -21,7 +21,7 @@ namespace ConsoleScenario.Tests.Functional
 			ScenarioHelper.Do(() =>
 				GivenATestConsoleScenario(TestName)
 					.Expect("Error incoming...")
-					.Any(1)
+					.Any()
 					.Run(),
 				ScenarioHelper.Expect(
 					"Unexpected console error",

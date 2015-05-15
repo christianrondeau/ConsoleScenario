@@ -1,4 +1,3 @@
-using System.Text.RegularExpressions;
 using ConsoleScenario.Tests.Utils;
 using NUnit.Framework;
 

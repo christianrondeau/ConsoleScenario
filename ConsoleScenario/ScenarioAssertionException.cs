@@ -1,9 +1,10 @@
 using System;
+using System.Runtime.Serialization;
 
 namespace ConsoleScenario
 {
 	[Serializable]
-	public class ScenarioAssertionException : Exception
+	public class ScenarioAssertionException : ApplicationException
 	{
 		private readonly string _description;
 		private readonly int _lineIndex;
@@ -44,6 +45,15 @@ namespace ConsoleScenario
 			_lineIndex = lineIndex;
 			_actual = actual;
 			_expected = expected;
+		}
+
+		public override void GetObjectData(SerializationInfo info, StreamingContext context)
+		{
+			base.GetObjectData(info, context);
+			info.AddValue("Description", _description);
+			info.AddValue("LineIndex", _lineIndex);
+			info.AddValue("Actual", _actual);
+			info.AddValue("Expected", _expected);
 		}
 
 		private static string BuildMessage(string description, int lineIndex, string actual, string expected)
